@@ -1,10 +1,10 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "Acquiro AI",
     "description": "Get a personalised Roadmap for your Dream job",
     "version": "0.1",
-    "browser_action": {
-        "defualt_popup": "popup.html"
+    "action": {
+        "default_popup": "popup.html"
     },
-    "permissions": ["activeTab"]
+    "permissions": ["activeTab","tabs"]
 }
