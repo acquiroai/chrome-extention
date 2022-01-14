@@ -13,7 +13,7 @@ async function mainFunc() {
   sendURL = btoa(sendURL)
   sendURL = 'http://127.0.0.1:5000/' + sendURL
 
-  let ans = await fetch(sendURL)
+  await fetch(sendURL)
     .then(
       function (response) {
         if (response.status !== 200) {
