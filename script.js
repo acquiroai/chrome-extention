@@ -1,3 +1,13 @@
+/*document.getElementById('button').addEventListener('click',function(){
+  console.log('btnComment worked')
+  chrome.browserAction.setPopup({popup: "/hist.html"})
+});*/
+
+document.getElementById("button").addEventListener("click", function () {
+  //chrome.action.setPopup({ popup: "hist.html" });
+  location.href = "hist.html";
+});
+
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
