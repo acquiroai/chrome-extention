@@ -119,17 +119,17 @@ async function updatePage() {
             detailsEle.appendChild(ele);
 
             ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Offered By"];
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Program Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Offered By"];
             ele.style.textIndent = "2em";
             detailsEle.appendChild(ele)
 
             ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Offered By"];
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Program Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Offered By"];
             ele.style.textIndent = "2em";
             detailsEle.appendChild(ele)
 
             ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Offered By"];
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Program Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Offered By"];
             ele.style.textIndent = "2em";
             detailsEle.appendChild(ele)
 
