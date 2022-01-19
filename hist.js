@@ -5,8 +5,7 @@
 
 async function getResponse() {
     email = "hello world"
-    email = btoa(email)
-    sendURL = 'http://127.0.0.1:5000/phase2/' + email
+    sendURL = 'http://127.0.0.1:5000/phase3/' + email
 
     return await fetch(sendURL)
         .then(
