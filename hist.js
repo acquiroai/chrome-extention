@@ -1,10 +1,5 @@
-//document.getElementById("button").addEventListener("click", function () {
-//chrome.action.setPopup({ popup: "hist.html" });
-//    location.href = "popup.html";
-//  });
-
 async function getResponse() {
-    email = "hello world"
+    email = "f20190089@dubai.bits-pilani.ac.in"
     sendURL = 'http://127.0.0.1:5000/phase3/' + email
 
     return await fetch(sendURL)
@@ -119,17 +114,17 @@ async function updatePage() {
             detailsEle.appendChild(ele);
 
             ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Program Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Offered By"];
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Offered By"];
             ele.style.textIndent = "2em";
             detailsEle.appendChild(ele)
 
             ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Program Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Offered By"];
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Offered By"];
             ele.style.textIndent = "2em";
             detailsEle.appendChild(ele)
 
             ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Program Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Offered By"];
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Offered By"];
             ele.style.textIndent = "2em";
             detailsEle.appendChild(ele)
 
@@ -187,6 +182,75 @@ async function updatePage() {
             ele = document.createElement("li")
             ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 5"]["Course Title"] + " (" + responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 5"]["Type"] + ")";
             ele.style.textIndent = "2em";
+            detailsEle.appendChild(ele);
+
+            detailsEle = document.createElement('details');
+            detailsEleSummary = document.createElement('summary');
+            detailsEleSummary.innerHTML = "Future Learn Courses"
+            detailsEleSummary.style.fontSize = "14px"
+            detailsEleSummary.style.textIndent = "1em"
+            detailsEle.appendChild(detailsEleSummary)
+            skill.appendChild(detailsEle)
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Future Learn"]["Course 1"]["Course Title"] 
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Future Learn"]["Course 2"]["Course Title"] 
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Future Learn"]["Course 3"]["Course Title"] 
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            detailsEle = document.createElement('details');
+            detailsEleSummary = document.createElement('summary');
+            detailsEleSummary.innerHTML = "Swayam Courses"
+            detailsEleSummary.style.fontSize = "14px"
+            detailsEleSummary.style.textIndent = "1em"
+            detailsEle.appendChild(detailsEleSummary)
+            skill.appendChild(detailsEle)
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 1"]["Instructor"]
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 2"]["Instructor"]
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 3"]["Instructor"]
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            detailsEle = document.createElement('details');
+            detailsEleSummary = document.createElement('summary');
+            detailsEleSummary.innerHTML = "ClassCentral Courses"
+            detailsEleSummary.style.fontSize = "14px"
+            detailsEleSummary.style.textIndent = "1em"
+            detailsEle.appendChild(detailsEleSummary)
+            skill.appendChild(detailsEle)
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 1"]["By"]
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 2"]["By"]
+            ele.style.textIndent = "2em"
+            detailsEle.appendChild(ele);
+        
+            ele = document.createElement("li")
+            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 3"]["By"]
+            ele.style.textIndent = "2em"
             detailsEle.appendChild(ele);
 
             detailsEle = document.createElement('details');
