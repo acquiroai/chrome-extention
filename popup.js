@@ -1,49 +1,36 @@
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
-function openTab() {
-  chrome.tabs.create({ "url": "http://127.0.0.1:3000", "active": false })
-}
-
-async function getTabId() {
-  await chrome.tabs.create({ "url": "http://127.0.0.1:3000", "active": false },(tab)=>{
-    return tab.id
-  })
-  tabs = await chrome.tabs.query({ "currentWindow": true })
-  //sleep(5000)
-  for (let i = 0; i < tabs.length; i++) {
-    if (tabs[i].title === "Hexal Energy") {
-      return tabs[i].id
-    }
-  }
-}
-
 async function getEmail() {
-  function getTitle() {
-    return document.getElementById("username").innerHTML;
-  }
-  let tabIdPass;
-  await chrome.tabs.create({ "url": "http://127.0.0.1:3000", "active": false },(tab)=>{
-    tabIdPass = tab.id
-  });
-  console.log(tabIdPass)
-  email = chrome.scripting.executeScript(
-    {
-      target: { tabId: tabIdPass, allFrames: true },
-      func: getTitle,
-    },
-    (injectionResults) => {
-      for (const frameResult of injectionResults) {
-        chrome.storage.local.set({ "email": frameResult.result });
-        return frameResult.result
+
+  createNewTab = await chrome.tabs.create({
+    "url": "http://localhost:3001/",
+    "active": false
+  })
+
+  await new Promise((resolve, reject) => {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (tabId == createNewTab.id && changeInfo.status == 'complete') {
+        resolve()
       }
-    });
-  return email;
+    })
+  })
+
+  runTabScript = await chrome.scripting.executeScript({
+    target: {
+      tabId: createNewTab.id,
+      allFrames: true
+    },
+    func: () => {
+      return document.getElementById("username").innerHTML;
+    },
+  })
+  email = runTabScript[0].result
+
+  if (email != null) {
+    chrome.storage.local.set({ "email": email });
+  }
+
+  chrome.tabs.remove(createNewTab.id)
+
+  return email
 }
 
 
@@ -56,23 +43,19 @@ async function getCurrentTab() {
 async function getResponse() {
   sendURL = await getCurrentTab();
   sendURL = btoa(sendURL);
-  let email;
-  email = await chrome.storage.local.get("email")
-  email = email.email;
+
+  let email = await chrome.storage.local.get("email").email
+
   if (email == undefined) {
     email = await getEmail();
   }
-  /*email = chrome.storage.local.get("email").then((data)=>{
-    if (data.email == undefined){
-      await getEmail();
-    }
-    else return data.email;
-  });
-  console.log(email)
-  
-  email = await chrome.storage.local.get("email").then((data)=> {return data.email});
-  console.log(email);*/
 
+  if (email == null) {
+    // do something here if user is not logged in
+    //pass
+  }
+
+  console.log(email);
 
   sendURL = 'http://127.0.0.1:5000/phase1/' + sendURL + '/' + email;
 
@@ -358,3 +341,4 @@ async function updatePage() {
 //}
 
 updatePage()
+
