@@ -1,7 +1,7 @@
 async function getEmail() {
 
   createNewTab = await chrome.tabs.create({
-    "url": "http://localhost:3001/",
+    "url": "http://localhost:3000/",
     "active": false
   })
 
