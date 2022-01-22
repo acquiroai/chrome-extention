@@ -6,36 +6,44 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
-function openTab(){
-  chrome.tabs.create({"url":"http://127.0.0.1:3000", "active":false})
+function openTab() {
+  chrome.tabs.create({ "url": "http://127.0.0.1:3000", "active": false })
 }
 
 async function getTabId() {
-  await chrome.tabs.create({"url":"http://127.0.0.1:3000", "active":false})
+  await chrome.tabs.create({ "url": "http://127.0.0.1:3000", "active": false },(tab)=>{
+    return tab.id
+  })
   tabs = await chrome.tabs.query({ "currentWindow": true })
-  sleep(5000)
+  //sleep(5000)
   for (let i = 0; i < tabs.length; i++) {
-      if (tabs[i].title === "Hexal Energy") {
-          return tabs[i].id
-      }
+    if (tabs[i].title === "Hexal Energy") {
+      return tabs[i].id
+    }
   }
 }
 
 async function getEmail() {
   function getTitle() {
-      return document.getElementById("username").innerHTML;
+    return document.getElementById("username").innerHTML;
   }
-  const tabIdPass = await getTabId();
-  console.log(tabIdPass);
-  chrome.scripting.executeScript(
-      {
-          target: { tabId: tabIdPass, allFrames: true },
-          func: getTitle,
-      },
-      (injectionResults) => {
-          for (const frameResult of injectionResults)
-          chrome.storage.local.set({"email": frameResult.result});
-      });
+  let tabIdPass;
+  await chrome.tabs.create({ "url": "http://127.0.0.1:3000", "active": false },(tab)=>{
+    tabIdPass = tab.id
+  });
+  console.log(tabIdPass)
+  email = chrome.scripting.executeScript(
+    {
+      target: { tabId: tabIdPass, allFrames: true },
+      func: getTitle,
+    },
+    (injectionResults) => {
+      for (const frameResult of injectionResults) {
+        chrome.storage.local.set({ "email": frameResult.result });
+        return frameResult.result
+      }
+    });
+  return email;
 }
 
 
@@ -49,17 +57,22 @@ async function getResponse() {
   sendURL = await getCurrentTab();
   sendURL = btoa(sendURL);
   let email;
-  email = chrome.storage.local.get("email").then((data)=>{
+  email = await chrome.storage.local.get("email")
+  email = email.email;
+  if (email == undefined) {
+    email = await getEmail();
+  }
+  /*email = chrome.storage.local.get("email").then((data)=>{
     if (data.email == undefined){
-      getEmail();
+      await getEmail();
     }
     else return data.email;
   });
   console.log(email)
   
   email = await chrome.storage.local.get("email").then((data)=> {return data.email});
-  console.log(email);
-  
+  console.log(email);*/
+
 
   sendURL = 'http://127.0.0.1:5000/phase1/' + sendURL + '/' + email;
 
