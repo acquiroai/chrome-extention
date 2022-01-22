@@ -1,12 +1,43 @@
-/*document.getElementById('button').addEventListener('click',function(){
-  console.log('btnComment worked')
-  chrome.browserAction.setPopup({popup: "/hist.html"})
-});*/
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
 
-//document.getElementById("button").addEventListener("click", function () {
-//chrome.action.setPopup({ popup: "hist.html" });
-//  location.href = "hist.html";
-//});
+function openTab(){
+  chrome.tabs.create({"url":"http://127.0.0.1:3000", "active":false})
+}
+
+async function getTabId() {
+  await chrome.tabs.create({"url":"http://127.0.0.1:3000", "active":false})
+  tabs = await chrome.tabs.query({ "currentWindow": true })
+  sleep(5000)
+  for (let i = 0; i < tabs.length; i++) {
+      if (tabs[i].title === "Hexal Energy") {
+          return tabs[i].id
+      }
+  }
+}
+
+async function getEmail() {
+  function getTitle() {
+      return document.getElementById("username").innerHTML;
+  }
+  const tabIdPass = await getTabId();
+  console.log(tabIdPass);
+  chrome.scripting.executeScript(
+      {
+          target: { tabId: tabIdPass, allFrames: true },
+          func: getTitle,
+      },
+      (injectionResults) => {
+          for (const frameResult of injectionResults)
+          chrome.storage.local.set({"email": frameResult.result});
+      });
+}
+
 
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
@@ -16,8 +47,21 @@ async function getCurrentTab() {
 
 async function getResponse() {
   sendURL = await getCurrentTab();
-  sendURL = btoa(sendURL)
-  sendURL = 'http://127.0.0.1:5000/phase1/' + sendURL
+  sendURL = btoa(sendURL);
+  let email;
+  email = chrome.storage.local.get("email").then((data)=>{
+    if (data.email == undefined){
+      getEmail();
+    }
+    else return data.email;
+  });
+  console.log(email)
+  
+  email = await chrome.storage.local.get("email").then((data)=> {return data.email});
+  console.log(email);
+  
+
+  sendURL = 'http://127.0.0.1:5000/phase1/' + sendURL + '/' + email;
 
   return await fetch(sendURL)
     .then(
@@ -201,17 +245,17 @@ async function updatePage() {
     skill.appendChild(detailsEle)
 
     ele = document.createElement("li")
-    ele.innerHTML = responseData["Skill Set"][i]["Things to Do"]["Future Learn"]["Course 1"]["Course Title"] 
+    ele.innerHTML = responseData["Skill Set"][i]["Things to Do"]["Future Learn"]["Course 1"]["Course Title"]
     ele.style.textIndent = "2em"
     detailsEle.appendChild(ele);
 
     ele = document.createElement("li")
-    ele.innerHTML = responseData["Skill Set"][i]["Things to Do"]["Future Learn"]["Course 2"]["Course Title"] 
+    ele.innerHTML = responseData["Skill Set"][i]["Things to Do"]["Future Learn"]["Course 2"]["Course Title"]
     ele.style.textIndent = "2em"
     detailsEle.appendChild(ele);
 
     ele = document.createElement("li")
-    ele.innerHTML = responseData["Skill Set"][i]["Things to Do"]["Future Learn"]["Course 3"]["Course Title"] 
+    ele.innerHTML = responseData["Skill Set"][i]["Things to Do"]["Future Learn"]["Course 3"]["Course Title"]
     ele.style.textIndent = "2em"
     detailsEle.appendChild(ele);
 
