@@ -1,5 +1,65 @@
+async function getEmail() {
+
+    createNewTab = await chrome.tabs.create({
+      "url": "http://localhost:3000/",
+      "active": false
+    })
+  
+    await new Promise((resolve, reject) => {
+      chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+        if (tabId == createNewTab.id && changeInfo.status == 'complete') {
+          resolve()
+        }
+      })
+    })
+  
+    runTabScript = await chrome.scripting.executeScript({
+      target: {
+        tabId: createNewTab.id,
+        allFrames: true
+      },
+      func: () => {
+        return document.getElementById("username").innerHTML;
+      },
+    })
+    email = runTabScript[0].result
+  
+    if (email != null) {
+      chrome.storage.local.set({ "email": email });
+    }
+  
+    chrome.tabs.remove(createNewTab.id)
+  
+    return email
+  }
+  
+  
+  async function getCurrentTab() {
+    let queryOptions = { active: true, currentWindow: true };
+    let [tab] = await chrome.tabs.query(queryOptions);
+    return tab.url
+  }
+
 async function getResponse() {
-    email = "f20190089@dubai.bits-pilani.ac.in"
+    //email = "f20190089@dubai.bits-pilani.ac.in"
+
+    let email = await chrome.storage.local.get("email")
+    email = email.email
+  
+    if (email == undefined) {
+      email = await getEmail();
+    }
+  
+    if (email == null) {
+      createNewTab = await chrome.tabs.create({
+        "url": "http://localhost:3000/login",
+        "active": true
+      })
+      throw ''
+    }
+  
+    console.log(email);
+
     sendURL = 'http://127.0.0.1:5000/phase3/' + email
 
     return await fetch(sendURL)
@@ -21,6 +81,8 @@ async function getResponse() {
             console.log('Fetch Error :-S', err);
         });
 }
+
+chrome.storage.local.remove("email");
 
 async function updatePage() {
     responseDataArr = await getResponse();
@@ -294,3 +356,4 @@ async function updatePage() {
 //}
 
 updatePage()
+
