@@ -83,6 +83,8 @@ async function getResponse() {
     });
 }
 
+chrome.storage.local.remove("email");
+
 async function updatePage() {
   responseData = await getResponse();
   skillsSetLenght = responseData["Skill Set"].length
@@ -345,4 +347,6 @@ async function updatePage() {
 //}
 
 updatePage()
+
+
 
