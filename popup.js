@@ -53,7 +53,7 @@ async function getResponse() {
 
   if (email == null) {
     createNewTab = await chrome.tabs.create({
-      "url": "http://localhost:3000/",
+      "url": "http://localhost:3000/login",
       "active": true
     })
     throw ''
