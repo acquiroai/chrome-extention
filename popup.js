@@ -44,15 +44,19 @@ async function getResponse() {
   sendURL = await getCurrentTab();
   sendURL = btoa(sendURL);
 
-  let email = await chrome.storage.local.get("email").email
+  let email = await chrome.storage.local.get("email")
+  email = email.email
 
   if (email == undefined) {
     email = await getEmail();
   }
 
   if (email == null) {
-    // do something here if user is not logged in
-    //pass
+    createNewTab = await chrome.tabs.create({
+      "url": "http://localhost:3000/",
+      "active": true
+    })
+    throw ''
   }
 
   console.log(email);
