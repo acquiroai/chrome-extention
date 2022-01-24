@@ -1,7 +1,7 @@
 async function getEmail() {
 
     createNewTab = await chrome.tabs.create({
-      "url": "http://localhost:3000/",
+      "url": "http://65.1.91.60:3000/login",
       "active": false
     })
   
@@ -52,7 +52,7 @@ async function getResponse() {
   
     if (email == null) {
       createNewTab = await chrome.tabs.create({
-        "url": "http://localhost:3000/login",
+        "url": "http://65.1.91.60:3000/login",
         "active": true
       })
       throw ''
@@ -60,7 +60,7 @@ async function getResponse() {
   
     console.log(email);
 
-    sendURL = 'http://127.0.0.1:5000/phase3/' + email
+    sendURL = 'http://65.1.91.60:5000/phase3/' + email
 
     return await fetch(sendURL)
         .then(
@@ -356,4 +356,3 @@ async function updatePage() {
 //}
 
 updatePage()
-
