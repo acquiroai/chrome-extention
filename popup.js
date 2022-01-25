@@ -73,6 +73,8 @@ async function getResponse() {
 
         // Examine the text in the response
         return response.json().then(function (data) {
+          let loader = document.getElementById("loader")
+          loader.parentElement.removeChild(loader)
           return data;
         });
       }
