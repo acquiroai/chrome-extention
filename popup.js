@@ -25,10 +25,10 @@ async function getEmail() {
   email = runTabScript[0].result
 
   if (email != null) {
-    chrome.storage.local.set({ "email": email });
+    await chrome.storage.local.set({ "email": email });
   }
 
-  chrome.tabs.remove(createNewTab.id)
+  chrome.tabs.remove(createNewTab.id);
 
   return email
 }
@@ -50,7 +50,7 @@ async function getResponse() {
   if (email == undefined) {
     email = await getEmail();
   }
-  
+
 
   if (email == null || email == "") {
     createNewTab = await chrome.tabs.create({
@@ -60,8 +60,6 @@ async function getResponse() {
     throw ''
   }
 
-  console.log(email);
-
   sendURL = 'http://65.1.91.60:5000/phase1/' + sendURL + '/' + email;
 
   return await fetch(sendURL)
@@ -70,7 +68,7 @@ async function getResponse() {
         if (response.status !== 200) {
           console.log('Looks like there was a problem. Status Code: ' +
             response.status);
-          return;
+          throw `Looks like there was a problem. Status Code: ${response.status}`;
         }
 
         // Examine the text in the response
@@ -80,14 +78,26 @@ async function getResponse() {
       }
     )
     .catch(function (err) {
+      let loader = document.getElementById("loader")
+      loader.parentElement.removeChild(loader)
+
+      updatedErrorPage = document.createElement('p')
+      updatedErrorPage.style.fontSize = "15px"
+      updatedErrorPage.style.textAlign = 'center'
+      //updatedErrorPage.style.color = 'Red'
+      updatedErrorPage.innerHTML = "Could Not Find the Skill for This Page 😿"
+      document.body.append(updatedErrorPage)
+
       console.log('Fetch Error :-S', err);
     });
 }
 
-chrome.storage.local.remove("email");
+//chrome.storage.local.remove("email");
 
 async function updatePage() {
+
   responseData = await getResponse();
+
   skillsSetLenght = responseData["Skill Set"].length
   for (let i = 0; i < skillsSetLenght; i++) {
     skill = document.createElement('details')
@@ -95,7 +105,6 @@ async function updatePage() {
     skillSummary.innerHTML = responseData["Skill Set"][i]["Input Skill"]
     skillSummary.style.fontSize = "16px"
     skillSummary.style.fontWeight = "bold"
-    //skillSummary.insertAdjacentHTML("beforeend", `<style>summary{font-size:14px}</style>`)
     skill.appendChild(skillSummary)
     document.body.appendChild(skill)
 

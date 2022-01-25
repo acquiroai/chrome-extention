@@ -42,6 +42,26 @@
         background-color: #0aa8bd;
         color: white;
     }
+
+    .loader {
+        margin: auto;
+        border: 15px solid #EAF0F6;
+        border-radius: 50%;
+        border-top: 13px solid #0aa8bd;
+        width: 70px;
+        height: 70px;
+        animation: spinner 3s linear infinite;
+    }
+
+    @keyframes spinner {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 </style>
 
 <header>
@@ -55,6 +75,7 @@
     <center>
         <h1>Acqurio AI</h1>
         <h2 id=subtitle> Adding Clarity to your Journey</h2>
+        <div id=loader class="loader"></div>
 
     </center>
 </body>
