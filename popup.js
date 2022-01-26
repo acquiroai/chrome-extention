@@ -60,7 +60,7 @@ async function getResponse() {
     throw ''
   }
 
-  sendURL = 'http://65.1.91.60:5000/phase1/' + sendURL + '/' + email;
+  sendURL = 'http://192.168.0.108:5000/getskills/' + sendURL + '/' + email;
 
   return await fetch(sendURL)
     .then(
@@ -94,7 +94,7 @@ async function getResponse() {
     });
 }
 
-//chrome.storage.local.remove("email");
+chrome.storage.local.remove("email");
 
 async function updatePage() {
 
@@ -359,4 +359,3 @@ async function updatePage() {
 //}
 
 updatePage()
-
