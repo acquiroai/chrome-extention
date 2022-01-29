@@ -115,21 +115,34 @@ async function updatePage() {
     for (let j = 0; j < Object.keys(responseData['Skill Set'][parentIter][target][subtarget]).length; j++) {
       subtargetKeys = Object.keys(responseData['Skill Set'][parentIter][target][subtarget])[j]
 
-      infoDiv = document.createElement('div')
-      infoDiv.style.display = "inline-block";
-      infoDiv.style.width = "100%";
+      containerDiv = document.createElement('div');
+      containerDiv.style.display = "flex";
+      containerDiv.style.alignItems = "flex-start";
+      containerDiv.style.justifyContent = "flex-start";
+
+      imgDiv = document.createElement('div');
+      imgDiv.style.flexBasis = "20%";
+      containerDiv.appendChild(imgDiv);
 
       infoImg = document.createElement('img');
       infoImg.style.float = "left";
-      infoImg.src = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Picture"]
-      infoImg.width = "100"
-      infoImg.height = "150"
+      infoImg.src = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Picture"];
+      infoImg.width = "70"
+      infoImg.height = "70"
+      infoImg.maxWidth = "100%";
+      imgDiv.appendChild(infoImg);
+
+      infoDiv = document.createElement('div');
+      infoDiv.style.paddingLeft = "4px";
+      containerDiv.appendChild(infoDiv);
 
       infoHeading = document.createElement('h3')
-      infoHeading.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Title"]
+      infoHeading.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Title"];
+      infoHeading.style.float = "left";
+      infoDiv.appendChild(infoHeading);
 
       if (authorBy !== null) {
-        infoAuthorBy = document.createElement('a')
+        infoAuthorBy = document.createElement('h4')
         if (responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0] !== null) {
           infoAuthorBy.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0]
         }
@@ -142,12 +155,11 @@ async function updatePage() {
       infoLink = document.createElement('a')
       infoLink.innerHTML = " Link"
       infoLink.href = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Link"]
-
-      infoDiv.appendChild(infoImg);
-      infoDiv.appendChild(infoHeading);
-
+      infoLink.target = "_blank"
+      infoLink.rel = "noopener noreferrer"
       infoDiv.appendChild(infoLink);
-      detailsEle.appendChild(infoDiv);
+      detailsEle.appendChild(containerDiv);
+
     }
 
     return detailsEle;
@@ -196,33 +208,50 @@ async function updatePage() {
     for (let j = 0; j < Object.keys(responseData['Skill Set'][i]["Things to Watch"]).length; j++) {
       subtargetKeys = Object.keys(responseData['Skill Set'][i]["Things to Watch"])[j]
 
-      infoDiv = document.createElement('div')
-      infoDiv.style.display = "inline-block";
-      infoDiv.style.width = "100%";
+      containerDiv = document.createElement('div')
+      containerDiv.style.display = "flex"
+      containerDiv.style.alignItems = "flex-start"
+      containerDiv.style.justifyContent = "flex-start"
+
+      imgDiv = document.createElement('div')
+      imgDiv.style.flexBasis = "20%"
+      containerDiv.appendChild(imgDiv)
 
       infoImg = document.createElement('img');
       infoImg.style.float = "left";
-      infoImg.src = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Picture"]
+      infoImg.src = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Picture"];
+      infoImg.width = "70"
+      infoImg.height = "70"
+      infoImg.maxWidth = "100%";
+      imgDiv.appendChild(infoImg);
+
+      infoDiv = document.createElement('div');
+      //infoDiv.style.paddingLeft = "1px";
+      containerDiv.appendChild(infoDiv);
 
       infoHeading = document.createElement('h3')
-      infoHeading.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Title"]
-
-      infoAuthorBy = document.createElement('a')
-      infoAuthorBy.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Channel"]
-      infoDiv.appendChild(infoAuthorBy);
-
-      infoLink = document.createElement('a')
-      infoLink.innerHTML = " Link"
-      infoLink.href = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Link"]
-
-      infoDiv.appendChild(infoImg);
+      infoHeading.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Title"];
+      infoHeading.style.float = "left";
       infoDiv.appendChild(infoHeading);
 
+      infoAuthorBy = document.createElement('h4');
+      infoAuthorBy.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Channel"];
+
+      infoDiv.appendChild(infoAuthorBy);
+      infoLink = document.createElement('a')
+      infoLink.innerHTML = "Link"
+      infoLink.href = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Link"]
+      infoLink.target = "_blank"
+      infoLink.rel = "noopener noreferrer"
       infoDiv.appendChild(infoLink);
-      detailsEle.appendChild(infoDiv);
+      detailsEle.appendChild(containerDiv);
     }
+
+
+
   }
 }
+
 
 //async function mainFunc(){
 //  await updatePage()
