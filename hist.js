@@ -1,358 +1,224 @@
 async function getEmail() {
 
-    createNewTab = await chrome.tabs.create({
-      "url": "http://65.1.91.60:3000/login",
-      "active": false
+  createNewTab = await chrome.tabs.create({
+    "url": "http://65.1.91.60:3000/login",
+    "active": false
+  })
+
+  await new Promise((resolve, reject) => {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (tabId == createNewTab.id && changeInfo.status == 'complete') {
+        resolve()
+      }
     })
-  
-    await new Promise((resolve, reject) => {
-      chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-        if (tabId == createNewTab.id && changeInfo.status == 'complete') {
-          resolve()
-        }
-      })
-    })
-  
-    runTabScript = await chrome.scripting.executeScript({
-      target: {
-        tabId: createNewTab.id,
-        allFrames: true
-      },
-      func: () => {
-        return document.getElementById("username").innerHTML;
-      },
-    })
-    email = runTabScript[0].result
-  
-    if (email != null) {
-      chrome.storage.local.set({ "email": email });
-    }
-  
-    chrome.tabs.remove(createNewTab.id)
-  
-    return email
+  })
+
+  runTabScript = await chrome.scripting.executeScript({
+    target: {
+      tabId: createNewTab.id,
+      allFrames: true
+    },
+    func: () => {
+      return document.getElementById("username").innerHTML;
+    },
+  })
+  email = runTabScript[0].result
+
+  if (email != null) {
+    chrome.storage.local.set({ "email": email });
   }
-  
-  
-  async function getCurrentTab() {
-    let queryOptions = { active: true, currentWindow: true };
-    let [tab] = await chrome.tabs.query(queryOptions);
-    return tab.url
-  }
+
+  chrome.tabs.remove(createNewTab.id)
+
+  return email
+}
+
+
+async function getCurrentTab() {
+  let queryOptions = { active: true, currentWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  return tab.url
+}
 
 async function getResponse() {
-    //email = "f20190089@dubai.bits-pilani.ac.in"
+  //email = "f20190089@dubai.bits-pilani.ac.in"
 
-    let email = await chrome.storage.local.get("email")
-    email = email.email
-  
-    if (email == undefined) {
-      email = await getEmail();
-    }
-  
-    if (email == null) {
-      createNewTab = await chrome.tabs.create({
-        "url": "http://65.1.91.60:3000/login",
-        "active": true
-      })
-      throw ''
-    }
-  
-    console.log(email);
+  let email = await chrome.storage.local.get("email")
+  email = email.email
 
-    sendURL = 'http://65.1.91.60:5000/phase3/' + email
+  if (email == undefined) {
+    email = await getEmail();
+  }
 
-    return await fetch(sendURL)
-        .then(
-            function (response) {
-                if (response.status !== 200) {
-                    console.log('Looks like there was a problem. Status Code: ' +
-                        response.status);
-                    return;
-                }
+  if (email == null) {
+    createNewTab = await chrome.tabs.create({
+      "url": "http://65.1.91.60:3000/login",
+      "active": true
+    })
+    throw ''
+  }
 
-                // Examine the text in the response
-                return response.json().then(function (data) {
-                    return data;
-                });
-            }
-        )
-        .catch(function (err) {
-            console.log('Fetch Error :-S', err);
+  console.log(email);
+
+  sendURL = 'http://65.1.91.60:5000/history/' + email
+
+  return await fetch(sendURL)
+    .then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' +
+            response.status);
+          return;
+        }
+
+        // Examine the text in the response
+        return response.json().then(function (data) {
+          return data;
         });
+      }
+    )
+    .catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
 }
 
 chrome.storage.local.remove("email");
 
 async function updatePage() {
-    responseDataArr = await getResponse();
-    //skillsSetLenght = responseData["skill_set"].length
-    for (let i = 0; i < responseDataArr.length; i++) {
-        responseData = responseDataArr[i];
-        job = document.createElement("details");
-        jobSummary = document.createElement("summary");
-        jobSummary.innerHTML = responseDataArr[i]["company_title"];
-        jobSummary.style.fontSize = "16px"
-        jobSummary.style.fontWeight = "bold"
-        job.append(jobSummary);
-        document.body.append(job);
+  responseDataArr = await getResponse();
 
-        for (let i = 0; i < responseData["skill_set"].length; i++) {
-            skill = document.createElement('details')
-            skillSummary = document.createElement('summary')
-            skillSummary.innerHTML = responseData["skill_set"][i]["Input Skill"]
-            skillSummary.style.fontSize = "16px"
-            //skillSummary.style.fontIndent = "1em"
-            skill.appendChild(skillSummary)
-            job.appendChild(skill)
+  function insertInfo(target, subtarget, authorBy, parentIter) {
+    // Target = "Books to Read", "Things to Do" Type: String
+    // subtarget = "edX", "Books", "Magazines" Type: String
+    // response data is defined in an earlier scope Type: String
+    detailsEle = document.createElement('details');
+    detailsEleSummary = document.createElement('summary');
+    detailsEleSummary.innerHTML = subtarget
+    detailsEleSummary.style.fontSize = "14px"
+    detailsEleSummary.style.textIndent = "1em"
+    detailsEle.appendChild(detailsEleSummary)
+    //skill.appendChild(detailsEle)
 
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "Books to Read"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
+    for (let j = 0; j < Object.keys(responseData['Skill Set'][parentIter][target][subtarget]).length; j++) {
+      subtargetKeys = Object.keys(responseData['Skill Set'][parentIter][target][subtarget])[j]
 
-            ele = document.createElement('li');
-            ele.innerHTML = responseData["skill_set"][i]["Things to Read"]["Books"]["Book 1"]["Book Title"] + ' by ' + responseData["skill_set"][i]["Things to Read"]["Books"]["Book 1"]["Authors"][0];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
+      infoDiv = document.createElement('div')
+      infoDiv.style.display = "inline-block";
+      infoDiv.style.width = "100%";
 
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Read"]["Books"]["Book 2"]["Book Title"] + ' by ' + responseData["skill_set"][i]["Things to Read"]["Books"]["Book 2"]["Authors"][0];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
+      infoImg = document.createElement('img');
+      infoImg.style.float = "left";
+      infoImg.src = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Picture"]
+      infoImg.width = "100"
+      infoImg.height = "150"
 
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Read"]["Books"]["Book 3"]["Book Title"] + ' by ' + responseData["skill_set"][i]["Things to Read"]["Books"]["Book 3"]["Authors"][0];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
+      infoHeading = document.createElement('h3')
+      infoHeading.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Title"]
 
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "Magazines to Read"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Read"]["Magazines"]["Magazine 1"]["Magazine Title"] + " (" + responseData["skill_set"][i]["Things to Read"]["Magazines"]["Magazine 1"]["Publish Date"] + ")"
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Read"]["Magazines"]["Magazine 2"]["Magazine Title"] + " (" + responseData["skill_set"][i]["Things to Read"]["Magazines"]["Magazine 2"]["Publish Date"] + ")";
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Read"]["Magazines"]["Magazine 3"]["Magazine Title"] + " (" + responseData["skill_set"][i]["Things to Read"]["Magazines"]["Magazine 3"]["Publish Date"] + ")"
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "EdX Courses"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Course 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Course 1"]["Offered By"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Course 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Course 2"]["Offered By"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Course 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Course 3"]["Offered By"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 1"]["Offered By"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele)
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 2"]["Offered By"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele)
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["edX"]["Program 3"]["Offered By"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele)
-
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "Udemy Courses"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Udemy"]["Course 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Udemy"]["Course 1"]["Instructor"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Udemy"]["Course 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Udemy"]["Course 2"]["Instructor"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Udemy"]["Course 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Udemy"]["Course 3"]["Instructor"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "Coursera"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 1"]["Course Title"] + " (" + responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 1"]["Type"] + ")";
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 2"]["Course Title"] + " (" + responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 2"]["Type"] + ")";
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 3"]["Course Title"] + " (" + responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 3"]["Type"] + ")";
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 4"]["Course Title"] + " (" + responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 4"]["Type"] + ")";
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 5"]["Course Title"] + " (" + responseData["skill_set"][i]["Things to Do"]["Coursera"]["Course 5"]["Type"] + ")";
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "Future Learn Courses"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Future Learn"]["Course 1"]["Course Title"] 
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Future Learn"]["Course 2"]["Course Title"] 
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Future Learn"]["Course 3"]["Course Title"] 
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "Swayam Courses"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 1"]["Instructor"]
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 2"]["Instructor"]
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Swayam"]["Course 3"]["Instructor"]
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "ClassCentral Courses"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 1"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 1"]["By"]
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 2"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 2"]["By"]
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-        
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 3"]["Course Title"] + " by " + responseData["skill_set"][i]["Things to Do"]["Class Central"]["Course 3"]["By"]
-            ele.style.textIndent = "2em"
-            detailsEle.appendChild(ele);
-
-            detailsEle = document.createElement('details');
-            detailsEleSummary = document.createElement('summary');
-            detailsEleSummary.innerHTML = "Youtube Videos"
-            detailsEleSummary.style.fontSize = "14px"
-            detailsEleSummary.style.textIndent = "1em"
-            detailsEle.appendChild(detailsEleSummary)
-            skill.appendChild(detailsEle)
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Watch"]["Video 1"]["Video Title"] + " by " + responseData["skill_set"][i]["Things to Watch"]["Video 1"]["Channel Name"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Watch"]["Video 2"]["Video Title"] + " by " + responseData["skill_set"][i]["Things to Watch"]["Video 2"]["Channel Name"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Watch"]["Video 3"]["Video Title"] + " by " + responseData["skill_set"][i]["Things to Watch"]["Video 3"]["Channel Name"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Watch"]["Video 4"]["Video Title"] + " by " + responseData["skill_set"][i]["Things to Watch"]["Video 4"]["Channel Name"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
-
-            ele = document.createElement("li")
-            ele.innerHTML = responseData["skill_set"][i]["Things to Watch"]["Video 5"]["Video Title"] + " by " + responseData["skill_set"][i]["Things to Watch"]["Video 5"]["Channel Name"];
-            ele.style.textIndent = "2em";
-            detailsEle.appendChild(ele);
+      if (authorBy !== null) {
+        infoAuthorBy = document.createElement('a')
+        if (responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0] !== null) {
+          infoAuthorBy.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0]
         }
-    }
-}
+        else {
+          infoAuthorBy.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0]
+        }
+        infoDiv.appendChild(infoAuthorBy);
+      }
 
-//async function mainFunc(){
-//  await updatePage()
-//}
+      infoLink = document.createElement('a')
+      infoLink.innerHTML = " Link"
+      infoLink.href = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Link"]
+
+      infoDiv.appendChild(infoImg);
+      infoDiv.appendChild(infoHeading);
+
+      infoDiv.appendChild(infoLink);
+      detailsEle.appendChild(infoDiv);
+    }
+
+    return detailsEle;
+  }
+
+  for (let i = 0; i < responseDataArr.length; i++) {
+    responseData = responseDataArr[i];
+    job = document.createElement("details");
+    jobSummary = document.createElement("summary");
+    jobSummary.innerHTML = responseDataArr[i]["Company & Job Title"];
+    jobSummary.style.fontSize = "16px"
+    jobSummary.style.fontWeight = "bold"
+    job.append(jobSummary);
+    document.body.append(job);
+
+    for (let i = 0; i < responseData["Skill Set"].length; i++) {
+      skill = document.createElement('details')
+      skillSummary = document.createElement('summary')
+      skillSummary.innerHTML = responseData["Skill Set"][i]["Input Skill"]
+      skillSummary.style.fontSize = "16px"
+      //skillSummary.style.fontIndent = "1em"
+      skill.appendChild(skillSummary)
+      job.appendChild(skill)
+
+      // Books
+      skill.appendChild(insertInfo("Things to Read", "Books", "Author", i))
+
+      // Medium
+      skill.appendChild(insertInfo("Things to Read", "Medium", null, i))
+
+      // EdX courses
+      skill.appendChild(insertInfo("Things to Do", "edX", "Instructor", i))
+
+      // Udemy Courses
+      skill.appendChild(insertInfo("Things to Do", "Udemy", "By", i))
+
+      // Coursera
+      skill.appendChild(insertInfo("Things to Do", "Coursera", "By", i))
+
+      // Future Learn
+      skill.appendChild(insertInfo("Things to Do", "Future Learn", null, i))
+
+      // Class Central
+      skill.appendChild(insertInfo("Things to Do", "Class Central", "By", i))
+
+      // Youtube
+      detailsEle = document.createElement('details');
+      detailsEleSummary = document.createElement('summary');
+      detailsEleSummary.innerHTML = "Youtube Videos"
+      detailsEleSummary.style.fontSize = "14px"
+      detailsEleSummary.style.textIndent = "1em"
+      detailsEle.appendChild(detailsEleSummary)
+      skill.appendChild(detailsEle)
+
+      for (let j = 0; j < Object.keys(responseData['Skill Set'][i]["Things to Watch"]).length; j++) {
+        subtargetKeys = Object.keys(responseData['Skill Set'][i]["Things to Watch"])[j]
+
+        infoDiv = document.createElement('div')
+        infoDiv.style.display = "inline-block";
+        infoDiv.style.width = "100%";
+
+        infoImg = document.createElement('img');
+        infoImg.style.float = "left";
+        infoImg.src = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Picture"]
+
+        infoHeading = document.createElement('h3')
+        infoHeading.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Title"]
+
+        infoAuthorBy = document.createElement('a')
+        infoAuthorBy.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Channel"]
+        infoDiv.appendChild(infoAuthorBy);
+
+        infoLink = document.createElement('a')
+        infoLink.innerHTML = " Link"
+        infoLink.href = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Link"]
+
+        infoDiv.appendChild(infoImg);
+        infoDiv.appendChild(infoHeading);
+
+        infoDiv.appendChild(infoLink);
+        detailsEle.appendChild(infoDiv);
+      }
+    }
+  }
+}
 
 updatePage()
