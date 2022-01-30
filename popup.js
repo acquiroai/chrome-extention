@@ -99,9 +99,6 @@ chrome.storage.local.remove("email");
 async function updatePage() {
 
   responseData = await getResponse();
-  let skillPageHome;
-  let activitiesPage;
-  let sourcesPage;
 
   //Event Functions
   function skillSelected(evt) {
