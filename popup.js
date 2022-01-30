@@ -100,21 +100,54 @@ async function updatePage() {
 
   responseData = await getResponse();
 
-  function insertInfo(target, subtarget, authorBy, parentIter) {
-    // Target = "Books to Read", "Things to Do" Type: String
-    // subtarget = "edX", "Books", "Magazines" Type: String
-    // response data is defined in an earlier scope Type: String
-    detailsEle = document.createElement('details');
-    detailsEleSummary = document.createElement('summary');
-    detailsEleSummary.innerHTML = subtarget
-    detailsEleSummary.style.fontSize = "14px"
-    detailsEleSummary.style.textIndent = "1em"
-    detailsEle.appendChild(detailsEleSummary)
-    //skill.appendChild(detailsEle)
+  //Event Functions
+  function skillSelected(evt) {
+    //console.log(evt.currentTarget.skillChosen);
+    resp = evt.currentTarget.skillChosen
+    activitiesPage = document.createElement('div');
+    activitiesPage.id = "activitiesPage";
 
-    for (let j = 0; j < Object.keys(responseData['Skill Set'][parentIter][target][subtarget]).length; j++) {
-      subtargetKeys = Object.keys(responseData['Skill Set'][parentIter][target][subtarget])[j]
+    heading = document.createElement('h1');
+    heading.innerHTML = resp["Input Skill"];
+    activitiesPage.appendChild(heading);
 
+    activitiesPage.appendChild(document.createElement('br'))
+
+    for (let i = 1; i < Object.keys(resp).length; i++) {
+      for (let j = 0; j < Object.keys(resp[Object.keys(resp)[i]]).length; j++) {
+
+        acti = document.createElement('h2');
+        acti.innerHTML = Object.keys(resp[Object.keys(resp)[i]])[j];
+
+        acti.addEventListener("click", sourceSelected);
+
+        placeHolder = Object.keys(resp[Object.keys(resp)[i]])[j];
+        acti.sourceChosen = resp[Object.keys(resp)[i]][placeHolder];
+        acti.sourceType = placeHolder;
+        //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
+        //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
+        activitiesPage.appendChild(acti);
+      }
+    }
+
+    document.body.removeChild(document.getElementById('skillPageHome'));
+    document.body.appendChild(activitiesPage);
+  }
+
+  function sourceSelected(evt) {
+    resp = evt.currentTarget.sourceChosen;
+    sourcesPage = document.createElement('div');
+    sourcesPage.id = "sourcesPage";
+
+    heading = document.createElement('h1');
+    heading.innerHTML = evt.currentTarget.sourceType;
+    sourcesPage.appendChild(heading);
+
+    sourcesPage.appendChild(document.createElement('br'))
+
+    for (let i = 0; i < Object.keys(resp).length; i++) {
+
+      sourceInfo = resp[Object.keys(resp)[i]]
       containerDiv = document.createElement('div');
       containerDiv.style.display = "flex";
       containerDiv.style.alignItems = "flex-start";
@@ -126,7 +159,7 @@ async function updatePage() {
 
       infoImg = document.createElement('img');
       infoImg.style.float = "left";
-      infoImg.src = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Picture"];
+      infoImg.src = sourceInfo["Picture"];
       infoImg.width = "70"
       infoImg.height = "70"
       infoImg.maxWidth = "100%";
@@ -137,124 +170,53 @@ async function updatePage() {
       containerDiv.appendChild(infoDiv);
 
       infoHeading = document.createElement('h3')
-      infoHeading.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Title"];
+      infoHeading.innerHTML = sourceInfo["Title"];
       infoHeading.style.float = "left";
       infoDiv.appendChild(infoHeading);
 
-      if (authorBy !== null) {
+      /*if (sourceInfo["By"] !== null) {
         infoAuthorBy = document.createElement('h4')
-        if (responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0] !== null) {
-          infoAuthorBy.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0]
-        }
-        else {
-          infoAuthorBy.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0]
-        }
+        infoAuthorBy.innerHTML = sourceInfo["By"]
         infoDiv.appendChild(infoAuthorBy);
-      }
+      }*/
 
       infoLink = document.createElement('a')
       infoLink.innerHTML = " Link"
-      infoLink.href = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Link"]
+      infoLink.href = sourceInfo["Link"]
       infoLink.target = "_blank"
       infoLink.rel = "noopener noreferrer"
       infoDiv.appendChild(infoLink);
-      detailsEle.appendChild(containerDiv);
+      sourcesPage.appendChild(containerDiv);
 
     }
 
-    return detailsEle;
-  }
-
-  skillsSetLenght = responseData["Skill Set"].length
-  for (let i = 0; i < skillsSetLenght; i++) {
-    skill = document.createElement('details')
-    skillSummary = document.createElement('summary')
-    skillSummary.innerHTML = responseData["Skill Set"][i]["Input Skill"]
-    skillSummary.style.fontSize = "16px"
-    skillSummary.style.fontWeight = "bold"
-    skill.appendChild(skillSummary)
-    document.body.appendChild(skill)
-
-    // Books
-    skill.appendChild(insertInfo("Things to Read", "Books", "Author", i))
-
-    // Medium
-    skill.appendChild(insertInfo("Things to Read", "Medium", null, i))
-
-    // EdX courses
-    skill.appendChild(insertInfo("Things to Do", "edX", "Instructor", i))
-
-    // Udemy Courses
-    skill.appendChild(insertInfo("Things to Do", "Udemy", "By", i))
-
-    // Coursera
-    skill.appendChild(insertInfo("Things to Do", "Coursera", "By", i))
-
-    // Future Learn
-    skill.appendChild(insertInfo("Things to Do", "Future Learn", null, i))
-
-    // Class Central
-    skill.appendChild(insertInfo("Things to Do", "Class Central", "By", i))
-
-    // Youtube
-    detailsEle = document.createElement('details');
-    detailsEleSummary = document.createElement('summary');
-    detailsEleSummary.innerHTML = "Youtube Videos"
-    detailsEleSummary.style.fontSize = "14px"
-    detailsEleSummary.style.textIndent = "1em"
-    detailsEle.appendChild(detailsEleSummary)
-    skill.appendChild(detailsEle)
-
-    for (let j = 0; j < Object.keys(responseData['Skill Set'][i]["Things to Watch"]).length; j++) {
-      subtargetKeys = Object.keys(responseData['Skill Set'][i]["Things to Watch"])[j]
-
-      containerDiv = document.createElement('div')
-      containerDiv.style.display = "flex"
-      containerDiv.style.alignItems = "flex-start"
-      containerDiv.style.justifyContent = "flex-start"
-
-      imgDiv = document.createElement('div')
-      imgDiv.style.flexBasis = "20%"
-      containerDiv.appendChild(imgDiv)
-
-      infoImg = document.createElement('img');
-      infoImg.style.float = "left";
-      infoImg.src = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Picture"];
-      infoImg.width = "70"
-      infoImg.height = "70"
-      infoImg.maxWidth = "100%";
-      imgDiv.appendChild(infoImg);
-
-      infoDiv = document.createElement('div');
-      //infoDiv.style.paddingLeft = "1px";
-      containerDiv.appendChild(infoDiv);
-
-      infoHeading = document.createElement('h3')
-      infoHeading.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Title"];
-      infoHeading.style.float = "left";
-      infoDiv.appendChild(infoHeading);
-
-      infoAuthorBy = document.createElement('h4');
-      infoAuthorBy.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Channel"];
-
-      infoDiv.appendChild(infoAuthorBy);
-      infoLink = document.createElement('a')
-      infoLink.innerHTML = "Link"
-      infoLink.href = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Link"]
-      infoLink.target = "_blank"
-      infoLink.rel = "noopener noreferrer"
-      infoDiv.appendChild(infoLink);
-      detailsEle.appendChild(containerDiv);
-    }
-
-
+    document.body.removeChild(document.getElementById('activitiesPage'));
+    document.body.appendChild(sourcesPage);
 
   }
+  //Skills Found Page
+  let skillPageHome = document.createElement('div');
+  skillPageHome.id = "skillPageHome";
+
+  let heading = document.createElement('h1');
+  heading.innerHTML = responseData["Company & Job Title"];
+  skillPageHome.appendChild(heading);
+
+  skillPageHome.appendChild(document.createElement('br'))
+
+  for (let i = 0; i < Object.keys(responseData["Skill Set"]).length; i++) {
+    skill = document.createElement('h2');
+    skill.innerHTML = responseData["Skill Set"][i]["Input Skill"];
+
+    skill.addEventListener("click", skillSelected);
+    skill.skillChosen = responseData["Skill Set"][i];
+    //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
+    //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
+    skillPageHome.appendChild(skill);
+  }
+
+  document.body.appendChild(skillPageHome);
+
 }
-
-
-//async function mainFunc(){
-//  await updatePage()
-//}
 
 updatePage()
