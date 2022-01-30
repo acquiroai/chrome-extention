@@ -99,6 +99,9 @@ chrome.storage.local.remove("email");
 async function updatePage() {
 
   responseData = await getResponse();
+  let skillPageHome;
+  let activitiesPage;
+  let sourcesPage;
 
   //Event Functions
   function skillSelected(evt) {
@@ -106,10 +109,21 @@ async function updatePage() {
     resp = evt.currentTarget.skillChosen
     activitiesPage = document.createElement('div');
     activitiesPage.id = "activitiesPage";
+    activitiesPage.style.margin = "5%";
+
 
     heading = document.createElement('h1');
     heading.innerHTML = resp["Input Skill"];
+    heading.style.display = "inline-block";
     activitiesPage.appendChild(heading);
+
+    bkBtn = document.createElement('button');
+    bkBtn.classList.add("backButton");
+    bkBtn.addEventListener("click", changePage);
+    bkBtn.pageCurr = activitiesPage;
+    bkBtn.pageToChg = skillPageHome;
+    bkBtn.innerHTML = "Back";
+    activitiesPage.appendChild(bkBtn);
 
     activitiesPage.appendChild(document.createElement('br'))
 
@@ -130,7 +144,14 @@ async function updatePage() {
       }
     }
 
-    document.body.removeChild(document.getElementById('skillPageHome'));
+    if(document.getElementById("sourcesPage")!==null){
+      document.body.removeChild(document.getElementById("sourcesPage"));
+    }
+
+    if(document.getElementById("skillPageHome")!==null){
+      document.body.removeChild(document.getElementById("skillPageHome"));
+    }
+
     document.body.appendChild(activitiesPage);
   }
 
@@ -138,10 +159,20 @@ async function updatePage() {
     resp = evt.currentTarget.sourceChosen;
     sourcesPage = document.createElement('div');
     sourcesPage.id = "sourcesPage";
+    sourcesPage.style.margin = "5%";
 
     heading = document.createElement('h1');
     heading.innerHTML = evt.currentTarget.sourceType;
+    heading.style.display = "inline-block";
     sourcesPage.appendChild(heading);
+
+    bkBtn = document.createElement('button');
+    bkBtn.classList.add("backButton");
+    bkBtn.addEventListener("click", changePage);
+    bkBtn.pageCurr = sourcesPage;
+    bkBtn.pageToChg = activitiesPage;
+    bkBtn.innerHTML = "Back";
+    sourcesPage.appendChild(bkBtn);
 
     sourcesPage.appendChild(document.createElement('br'))
 
@@ -170,22 +201,23 @@ async function updatePage() {
       containerDiv.appendChild(infoDiv);
 
       infoHeading = document.createElement('h3')
-      infoHeading.innerHTML = sourceInfo["Title"];
       infoHeading.style.float = "left";
       infoDiv.appendChild(infoHeading);
-
-      /*if (sourceInfo["By"] !== null) {
-        infoAuthorBy = document.createElement('h4')
-        infoAuthorBy.innerHTML = sourceInfo["By"]
-        infoDiv.appendChild(infoAuthorBy);
-      }*/
-
       infoLink = document.createElement('a')
-      infoLink.innerHTML = " Link"
+      infoLink.innerHTML = sourceInfo["Title"]
+      infoLink.style.color = "#000000"
       infoLink.href = sourceInfo["Link"]
       infoLink.target = "_blank"
       infoLink.rel = "noopener noreferrer"
-      infoDiv.appendChild(infoLink);
+      infoHeading.appendChild(infoLink);
+
+      if (sourceInfo["By"] !== undefined) {
+        infoAuthorBy = document.createElement('h4')
+        infoAuthorBy.innerHTML = sourceInfo["By"]
+        infoDiv.appendChild(infoAuthorBy);
+      }
+
+      
       sourcesPage.appendChild(containerDiv);
 
     }
@@ -195,28 +227,42 @@ async function updatePage() {
 
   }
   //Skills Found Page
-  let skillPageHome = document.createElement('div');
-  skillPageHome.id = "skillPageHome";
+  function skillsFound() {
+    let skillPageHome = document.createElement('div');
+    skillPageHome.id = "skillPageHome";
+    skillPageHome.style.margin = "5%";
 
-  let heading = document.createElement('h1');
-  heading.innerHTML = responseData["Company & Job Title"];
-  skillPageHome.appendChild(heading);
+    let heading = document.createElement('h1');
+    heading.innerHTML = responseData["Company & Job Title"];
+    skillPageHome.appendChild(heading);
+    skillsFoundHeading = document.createElement('h2')
+    heading.innerHTML = "Skills Found on This Page 💪"
 
-  skillPageHome.appendChild(document.createElement('br'))
 
-  for (let i = 0; i < Object.keys(responseData["Skill Set"]).length; i++) {
-    skill = document.createElement('h2');
-    skill.innerHTML = responseData["Skill Set"][i]["Input Skill"];
+    skillPageHome.appendChild(document.createElement('br'))
 
-    skill.addEventListener("click", skillSelected);
-    skill.skillChosen = responseData["Skill Set"][i];
-    //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
-    //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
-    skillPageHome.appendChild(skill);
+    for (let i = 0; i < Object.keys(responseData["Skill Set"]).length; i++) {
+      skill = document.createElement('h2');
+      skill.innerHTML = responseData["Skill Set"][i]["Input Skill"];
+
+      skill.addEventListener("click", skillSelected);
+      skill.skillChosen = responseData["Skill Set"][i];
+      //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
+      //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
+      skillPageHome.appendChild(skill);
+    }
+    if(document.getElementById("activitiesPage")!==null){
+      document.body.removeChild(document.getElementById("activitiesPage"));
+    }
+    document.body.appendChild(skillPageHome);
   }
 
-  document.body.appendChild(skillPageHome);
+  function changePage(evt){
+    document.body.removeChild(evt.currentTarget.pageCurr);
+    document.body.appendChild(evt.currentTarget.pageToChg);
+  }
 
+  skillsFound();
 }
 
 updatePage()
