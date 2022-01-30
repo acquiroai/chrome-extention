@@ -87,21 +87,77 @@ chrome.storage.local.remove("email");
 async function updatePage() {
   responseDataArr = await getResponse();
 
-  function insertInfo(target, subtarget, authorBy, parentIter) {
-    // Target = "Books to Read", "Things to Do" Type: String
-    // subtarget = "edX", "Books", "Magazines" Type: String
-    // response data is defined in an earlier scope Type: String
-    detailsEle = document.createElement('details');
-    detailsEleSummary = document.createElement('summary');
-    detailsEleSummary.innerHTML = subtarget
-    detailsEleSummary.style.fontSize = "14px"
-    detailsEleSummary.style.textIndent = "1em"
-    detailsEle.appendChild(detailsEleSummary)
-    //skill.appendChild(detailsEle)
+  //Event Functions
+  function skillSelected(evt) {
+    //console.log(evt.currentTarget.skillChosen);
+    resp = evt.currentTarget.skillChosen
+    activitiesPage = document.createElement('div');
+    activitiesPage.id = "activitiesPage";
+    activitiesPage.style.margin = "5%";
 
-    for (let j = 0; j < Object.keys(responseData['Skill Set'][parentIter][target][subtarget]).length; j++) {
-      subtargetKeys = Object.keys(responseData['Skill Set'][parentIter][target][subtarget])[j]
 
+    heading = document.createElement('h2');
+    heading.innerHTML = resp["Input Skill"];
+    heading.style.display = "inline-block";
+    activitiesPage.appendChild(heading);
+
+    bkBtn = document.createElement('button');
+    bkBtn.classList.add("backButton");
+    bkBtn.addEventListener("click", changePage);
+    bkBtn.pageCurr = activitiesPage;
+    bkBtn.pageToChg = skillPageHome;
+    bkBtn.innerHTML = "Back";
+    activitiesPage.appendChild(bkBtn);
+
+    activitiesPage.appendChild(document.createElement('br'))
+
+    for (let i =0; i < Object.keys(resp).length; i++) {
+      if (i===1) continue;
+      for (let j = 0; j < Object.keys(resp[Object.keys(resp)[i]]).length; j++) {
+
+        acti = document.createElement('h2');
+        acti.innerHTML = Object.keys(resp[Object.keys(resp)[i]])[j];
+
+        acti.addEventListener("click", sourceSelected);
+
+        placeHolder = Object.keys(resp[Object.keys(resp)[i]])[j];
+        acti.sourceChosen = resp[Object.keys(resp)[i]][placeHolder];
+        acti.sourceType = placeHolder;
+        //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
+        //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
+        activitiesPage.appendChild(acti);
+      }
+    }
+
+
+    document.body.removeChild(document.getElementById("skillPageHome"));
+    document.body.appendChild(activitiesPage);
+  }
+
+  function sourceSelected(evt) {
+    resp = evt.currentTarget.sourceChosen;
+    sourcesPage = document.createElement('div');
+    sourcesPage.id = "sourcesPage";
+    sourcesPage.style.margin = "5%";
+
+    heading = document.createElement('h1');
+    heading.innerHTML = evt.currentTarget.sourceType;
+    heading.style.display = "inline-block";
+    sourcesPage.appendChild(heading);
+
+    bkBtn = document.createElement('button');
+    bkBtn.classList.add("backButton");
+    bkBtn.addEventListener("click", changePage);
+    bkBtn.pageCurr = sourcesPage;
+    bkBtn.pageToChg = activitiesPage;
+    bkBtn.innerHTML = "Back";
+    sourcesPage.appendChild(bkBtn);
+
+    sourcesPage.appendChild(document.createElement('br'))
+
+    for (let i = 0; i < Object.keys(resp).length; i++) {
+
+      sourceInfo = resp[Object.keys(resp)[i]]
       containerDiv = document.createElement('div');
       containerDiv.style.display = "flex";
       containerDiv.style.alignItems = "flex-start";
@@ -113,7 +169,7 @@ async function updatePage() {
 
       infoImg = document.createElement('img');
       infoImg.style.float = "left";
-      infoImg.src = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Picture"];
+      infoImg.src = sourceInfo["Picture"];
       infoImg.width = "70"
       infoImg.height = "70"
       infoImg.maxWidth = "100%";
@@ -124,114 +180,116 @@ async function updatePage() {
       containerDiv.appendChild(infoDiv);
 
       infoHeading = document.createElement('h3')
-      infoHeading.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Title"];
       infoHeading.style.float = "left";
       infoDiv.appendChild(infoHeading);
-
-      if (authorBy !== null) {
-        infoAuthorBy = document.createElement('h4')
-        if (responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0] !== null) {
-          infoAuthorBy.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0]
-        }
-        else {
-          infoAuthorBy.innerHTML = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys][authorBy][0]
-        }
-        infoDiv.appendChild(infoAuthorBy);
-      }
-
       infoLink = document.createElement('a')
-      infoLink.innerHTML = " Link"
-      infoLink.href = responseData["Skill Set"][parentIter][target][subtarget][subtargetKeys]["Link"]
+      infoLink.innerHTML = sourceInfo["Title"]
+      infoLink.style.color = "#000000"
+      infoLink.href = sourceInfo["Link"]
       infoLink.target = "_blank"
       infoLink.rel = "noopener noreferrer"
-      infoDiv.appendChild(infoLink);
-      detailsEle.appendChild(containerDiv);
+      infoHeading.appendChild(infoLink);
 
-    }
-
-    return detailsEle;
-  }
-
-  for (let i = 0; i < responseDataArr.length; i++) {
-    responseData = responseDataArr[i];
-    job = document.createElement("details");
-    jobSummary = document.createElement("summary");
-    jobSummary.innerHTML = responseDataArr[i]["Company & Job Title"];
-    jobSummary.style.fontSize = "16px"
-    jobSummary.style.fontWeight = "bold"
-    job.append(jobSummary);
-    document.body.append(job);
-
-    for (let i = 0; i < responseData["Skill Set"].length; i++) {
-      skill = document.createElement('details')
-      skillSummary = document.createElement('summary')
-      skillSummary.innerHTML = responseData["Skill Set"][i]["Input Skill"]
-      skillSummary.style.fontSize = "16px"
-      //skillSummary.style.fontIndent = "1em"
-      skill.appendChild(skillSummary)
-      job.appendChild(skill)
-
-      // Books
-      skill.appendChild(insertInfo("Things to Read", "Books", "Author", i))
-
-      // Medium
-      skill.appendChild(insertInfo("Things to Read", "Medium", null, i))
-
-      // EdX courses
-      skill.appendChild(insertInfo("Things to Do", "edX", "Instructor", i))
-
-      // Udemy Courses
-      skill.appendChild(insertInfo("Things to Do", "Udemy", "By", i))
-
-      // Coursera
-      skill.appendChild(insertInfo("Things to Do", "Coursera", "By", i))
-
-      // Future Learn
-      skill.appendChild(insertInfo("Things to Do", "Future Learn", null, i))
-
-      // Class Central
-      skill.appendChild(insertInfo("Things to Do", "Class Central", "By", i))
-
-      // Youtube
-      detailsEle = document.createElement('details');
-      detailsEleSummary = document.createElement('summary');
-      detailsEleSummary.innerHTML = "Youtube Videos"
-      detailsEleSummary.style.fontSize = "14px"
-      detailsEleSummary.style.textIndent = "1em"
-      detailsEle.appendChild(detailsEleSummary)
-      skill.appendChild(detailsEle)
-
-      for (let j = 0; j < Object.keys(responseData['Skill Set'][i]["Things to Watch"]).length; j++) {
-        subtargetKeys = Object.keys(responseData['Skill Set'][i]["Things to Watch"])[j]
-
-        infoDiv = document.createElement('div')
-        infoDiv.style.display = "inline-block";
-        infoDiv.style.width = "100%";
-
-        infoImg = document.createElement('img');
-        infoImg.style.float = "left";
-        infoImg.src = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Picture"]
-
-        infoHeading = document.createElement('h3')
-        infoHeading.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Title"]
-
-        infoAuthorBy = document.createElement('a')
-        infoAuthorBy.innerHTML = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Channel"]
+      if (sourceInfo["By"] !== undefined) {
+        infoAuthorBy = document.createElement('h4')
+        infoAuthorBy.innerHTML = sourceInfo["By"]
         infoDiv.appendChild(infoAuthorBy);
-
-        infoLink = document.createElement('a')
-        infoLink.innerHTML = " Link"
-        infoLink.href = responseData["Skill Set"][i]["Things to Watch"][subtargetKeys]["Link"]
-        infoLink.target = "_blank"
-        infoLink.rel = "noopener noreferrer"
-        infoDiv.appendChild(infoImg);
-        infoDiv.appendChild(infoHeading);
-
-        infoDiv.appendChild(infoLink);
-        detailsEle.appendChild(infoDiv);
       }
+
+
+      sourcesPage.appendChild(containerDiv);
+
     }
+
+    document.body.removeChild(document.getElementById('activitiesPage'));
+    document.body.appendChild(sourcesPage);
+
   }
+  //Skills Found Page
+  function skillsFound(evt) {
+    responseData = evt.currentTarget.jobChosen;
+    let skillPageHome = document.createElement('div');
+    skillPageHome.id = "skillPageHome";
+    skillPageHome.style.margin = "5%";
+
+    let heading = document.createElement('h1');
+    heading.innerHTML = responseData["Company & Job Title"];
+    heading.style.display = "inline-block";
+    skillPageHome.appendChild(heading);
+
+    bkBtn = document.createElement('button');
+    bkBtn.classList.add("backButton");
+    bkBtn.addEventListener("click", changePage);
+    bkBtn.pageCurr = skillPageHome;
+    bkBtn.pageToChg = histPageHome;
+    bkBtn.innerHTML = "Back";
+    skillPageHome.appendChild(bkBtn);
+
+    skillPageHome.appendChild(document.createElement('br'))
+
+    for (let i = 0; i < Object.keys(responseData["Skill Set"]).length; i++) {
+      skill = document.createElement('h2');
+      skill.innerHTML = responseData["Skill Set"][i]["Input Skill"];
+
+      skill.addEventListener("click", skillSelected);
+      skill.skillChosen = responseData["Skill Set"][i];
+      //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
+      //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
+      skillPageHome.appendChild(skill);
+    }
+
+    //jobMeta = document.createElement('div');
+    skillPageHome.append(document.createElement('br'))
+    jobTitle = document.createElement('h3');
+    jobTitle.innerHTML = "Title & Company Name: " + responseData["Company & Job Title"];
+    skillPageHome.appendChild(jobTitle);
+
+    minWorkEx = document.createElement('h3');
+    minWorkEx.innerHTML = "Min Work Experience: " + responseData["Minimum Work Experience"] + " (in years)";
+    skillPageHome.appendChild(minWorkEx);
+
+    jobLoc = document.createElement('h3');
+    jobLoc.innerHTML = "Location: " + responseData["Location"]
+    skillPageHome.appendChild(jobLoc);
+
+    if (document.getElementById("activitiesPage") !== null) {
+      document.body.removeChild(document.getElementById("activitiesPage"));
+    }
+    document.body.removeChild(document.getElementById("histPageHome"))
+    document.body.appendChild(skillPageHome);
+  }
+
+  function history() {
+    let histPageHome = document.createElement('div');
+    histPageHome.id = "histPageHome";
+    histPageHome.style.margin = "5%";
+
+    let heading = document.createElement('h1');
+    heading.innerHTML = "Your History 🧠⚡️"
+    histPageHome.appendChild(heading);
+
+    histPageHome.appendChild(document.createElement('br'))
+
+    for (let i = 0; i < responseDataArr.length; i++) {
+      hist = document.createElement('h2');
+      hist.innerHTML = responseDataArr[i]["Company & Job Title"];
+
+      hist.addEventListener("click", skillsFound);
+      hist.jobChosen = responseDataArr[i];
+      //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
+      //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
+      histPageHome.appendChild(hist);
+    }
+
+    document.body.appendChild(histPageHome);
+  }
+
+  function changePage(evt) {
+    document.body.removeChild(evt.currentTarget.pageCurr);
+    document.body.appendChild(evt.currentTarget.pageToChg);
+  }
+
+  history();
 }
 
 updatePage()

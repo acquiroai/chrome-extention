@@ -248,6 +248,21 @@ async function updatePage() {
       //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
       skillPageHome.appendChild(skill);
     }
+
+    //jobMeta = document.createElement('div');
+    skillPageHome.append(document.createElement('br'))
+    jobTitle = document.createElement('h3');
+    jobTitle.innerHTML = "Title & Company Name: " +  responseData["Company & Job Title"];
+    skillPageHome.appendChild(jobTitle);
+
+    minWorkEx = document.createElement('h3');
+    minWorkEx.innerHTML = "Min Work Experience: " + responseData["Minimum Work Experience"] + " (in years)";
+    skillPageHome.appendChild(minWorkEx);
+
+    jobLoc = document.createElement('h3');
+    jobLoc.innerHTML = "Location: " + responseData["Location"]
+    skillPageHome.appendChild(jobLoc);
+
     if(document.getElementById("activitiesPage")!==null){
       document.body.removeChild(document.getElementById("activitiesPage"));
     }
