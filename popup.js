@@ -24,15 +24,51 @@ async function getEmail() {
   })
   email = runTabScript[0].result
 
-  if (email != null) {
-    await chrome.storage.local.set({ "email": email });
-  }
+  await chrome.storage.local.set({ "email": email });
 
   chrome.tabs.remove(createNewTab.id);
 
   return email
 }
 
+async function logout() {
+
+  createNewTab = await chrome.tabs.create({
+    "url": "http://65.1.91.60:3000/",
+    "active": false
+  })
+
+  await new Promise((resolve, reject) => {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (tabId == createNewTab.id && changeInfo.status == 'complete') {
+        resolve()
+      }
+    })
+  })
+
+  runTabScript = await chrome.scripting.executeScript({
+    target: {
+      tabId: createNewTab.id,
+      allFrames: true
+    },
+    func: () => {
+      document.getElementById("logout-button").click();
+    },
+  })
+
+
+  chrome.storage.local.remove("email");
+
+  chrome.tabs.remove(createNewTab.id)
+
+  return email
+}
+
+logout_button = document.getElementById('logout-button');
+logout_button.addEventListener("click", function (evt) {
+  evt.preventDefault();
+  logout();
+}, false);
 
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
@@ -47,12 +83,11 @@ async function getResponse() {
   let email = await chrome.storage.local.get("email")
   email = email.email
 
-  if (email == undefined) {
+  if (email === undefined || email === "") {
     email = await getEmail();
   }
 
-
-  if (email == null || email == "") {
+  if (email === null || email === "") {
     createNewTab = await chrome.tabs.create({
       "url": "http://65.1.91.60:3000/login",
       "active": true
@@ -93,8 +128,6 @@ async function getResponse() {
       console.log('Fetch Error :-S', err);
     });
 }
-
-chrome.storage.local.remove("email");
 
 async function updatePage() {
 
@@ -141,11 +174,11 @@ async function updatePage() {
       }
     }
 
-    if(document.getElementById("sourcesPage")!==null){
+    if (document.getElementById("sourcesPage") !== null) {
       document.body.removeChild(document.getElementById("sourcesPage"));
     }
 
-    if(document.getElementById("skillPageHome")!==null){
+    if (document.getElementById("skillPageHome") !== null) {
       document.body.removeChild(document.getElementById("skillPageHome"));
     }
 
@@ -214,7 +247,7 @@ async function updatePage() {
         infoDiv.appendChild(infoAuthorBy);
       }
 
-      
+
       sourcesPage.appendChild(containerDiv);
 
     }
@@ -252,7 +285,7 @@ async function updatePage() {
     //jobMeta = document.createElement('div');
     skillPageHome.append(document.createElement('br'))
     jobTitle = document.createElement('h3');
-    jobTitle.innerHTML = "Title & Company Name: " +  responseData["Company & Job Title"];
+    jobTitle.innerHTML = "Title & Company Name: " + responseData["Company & Job Title"];
     skillPageHome.appendChild(jobTitle);
 
     minWorkEx = document.createElement('h3');
@@ -263,13 +296,13 @@ async function updatePage() {
     jobLoc.innerHTML = "Location: " + responseData["Location"]
     skillPageHome.appendChild(jobLoc);
 
-    if(document.getElementById("activitiesPage")!==null){
+    if (document.getElementById("activitiesPage") !== null) {
       document.body.removeChild(document.getElementById("activitiesPage"));
     }
     document.body.appendChild(skillPageHome);
   }
 
-  function changePage(evt){
+  function changePage(evt) {
     document.body.removeChild(evt.currentTarget.pageCurr);
     document.body.appendChild(evt.currentTarget.pageToChg);
   }

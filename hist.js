@@ -24,14 +24,52 @@ async function getEmail() {
   })
   email = runTabScript[0].result
 
-  if (email != null) {
-    chrome.storage.local.set({ "email": email });
-  }
+  chrome.storage.local.set({ "email": email });
 
   chrome.tabs.remove(createNewTab.id)
 
   return email
 }
+
+async function logout() {
+
+  createNewTab = await chrome.tabs.create({
+    "url": "http://65.1.91.60:3000/login",
+    "active": false
+  })
+
+  await new Promise((resolve, reject) => {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (tabId == createNewTab.id && changeInfo.status == 'complete') {
+        resolve()
+      }
+    })
+  })
+
+  runTabScript = await chrome.scripting.executeScript({
+    target: {
+      tabId: createNewTab.id,
+      allFrames: true
+    },
+    func: () => {
+      document.getElementById("logout-button").click();
+    },
+  })
+
+
+  chrome.storage.local.remove("email");
+
+
+  chrome.tabs.remove(createNewTab.id)
+
+  return email
+}
+
+logout_button = document.getElementById('logout-button');
+logout_button.addEventListener("click", function (evt) {
+  evt.preventDefault();
+  logout();
+}, false);
 
 
 async function getCurrentTab() {
@@ -46,7 +84,7 @@ async function getResponse() {
   let email = await chrome.storage.local.get("email")
   email = email.email
 
-  if (email == undefined) {
+  if (email === undefined || email === "") {
     email = await getEmail();
   }
 
@@ -82,8 +120,6 @@ async function getResponse() {
     });
 }
 
-chrome.storage.local.remove("email");
-
 async function updatePage() {
   responseDataArr = await getResponse();
 
@@ -111,8 +147,8 @@ async function updatePage() {
 
     activitiesPage.appendChild(document.createElement('br'))
 
-    for (let i =0; i < Object.keys(resp).length; i++) {
-      if (i===1) continue;
+    for (let i = 0; i < Object.keys(resp).length; i++) {
+      if (i === 1) continue;
       for (let j = 0; j < Object.keys(resp[Object.keys(resp)[i]]).length; j++) {
 
         acti = document.createElement('h2');
