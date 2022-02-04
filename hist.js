@@ -96,8 +96,6 @@ async function getResponse() {
     throw ''
   }
 
-  console.log(email);
-
   sendURL = 'http://65.1.91.60:5000/history/' + email
 
   return await fetch(sendURL)
@@ -153,6 +151,7 @@ async function updatePage() {
 
         acti = document.createElement('h2');
         acti.innerHTML = Object.keys(resp[Object.keys(resp)[i]])[j];
+        acti.classList.add("linkedHeading");
 
         acti.addEventListener("click", sourceSelected);
 
@@ -265,6 +264,7 @@ async function updatePage() {
 
     for (let i = 0; i < Object.keys(responseData["Skill Set"]).length; i++) {
       skill = document.createElement('h2');
+      skill.classList.add("linkedHeading");
       skill.innerHTML = responseData["Skill Set"][i]["Input Skill"];
 
       skill.addEventListener("click", skillSelected);
@@ -309,6 +309,7 @@ async function updatePage() {
     for (let i = 0; i < responseDataArr.length; i++) {
       hist = document.createElement('h2');
       hist.innerHTML = responseDataArr[i]["Company & Job Title"];
+      hist.classList.add("linkedHeading")
 
       hist.addEventListener("click", skillsFound);
       hist.jobChosen = responseDataArr[i];

@@ -76,3 +76,11 @@ html {
     font-weight: 500;
     border-radius: 4px;
 }
+
+.linkedHeading {
+    text-decoration: underline;
+}
+
+.linkedHeading:hover {
+    color: #004AAD;
+}

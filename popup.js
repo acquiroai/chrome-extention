@@ -167,6 +167,7 @@ async function updatePage() {
 
         placeHolder = Object.keys(resp[Object.keys(resp)[i]])[j];
         acti.sourceChosen = resp[Object.keys(resp)[i]][placeHolder];
+        acti.classList.add("linkedHeading");
         acti.sourceType = placeHolder;
         //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
         //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
@@ -277,6 +278,7 @@ async function updatePage() {
 
       skill.addEventListener("click", skillSelected);
       skill.skillChosen = responseData["Skill Set"][i];
+      skill.classList.add("linkedHeading");
       //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
       //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
       skillPageHome.appendChild(skill);

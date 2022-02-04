@@ -6,21 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Acquiro Ai</title>
-    <script src="hist.js" async></script>
+    <script src="skills.js" async></script>
     <link rel="stylesheet" href="page.css">
 </head>
 
 <header>
     <div class="topnav">
         <a href="popup.html">Home</a>
-        <a href="#hist" class="active">History</a>
-        <a href="skills.html"> Skills </a>
+        <a href="hist.html">History</a>
+        <a href="#skills" class="active"> Skills </a>
         <a href='#' id="logout-button">Log Out</a>
         <img align="right" src="Acquiro AI Logo 1.svg">
     </div>
 </header>
 
 <body>
+    <form onsubmit="updatePage()">
+        Enter name: <input type="text">
+        <input type="submit">
+    </form>
 </body>
 
 
