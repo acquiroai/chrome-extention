@@ -1,28 +1,29 @@
-function openTab(){
-    chrome.tabs.create({"url":"http://127.0.0.1:3000", "active":false})
-}
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    alert(changeInfo.url);
+ }); 
+ 
+ chrome.tabs.onActivated.addListener(function(activeInfo) {
+   // how to fetch tab url using activeInfo.tabid
+   chrome.tabs.get(activeInfo.tabId, function(tab){
+       let getURL = tab.url;
+       if (getURL.substring(12,23) == "simplyhired"){ //simplyhired getURL.substring(12,23)
+              chrome.action.setIcon({path: { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }, tabId: activeInfo.tabId});
+       } 
 
-async function getTabId() {
-    tabs = await chrome.tabs.query({ "currentWindow": true })
-    for (let i = 0; i < tabs.length; i++) {
-        if (tabs[i].title === "Hexal Energy") {
-            return tabs[i].id
-        }
-    }
-}
+       else if (getURL.substring(12,18) == "naukri"){
+        chrome.action.setIcon({path: { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }, tabId: activeInfo.tabId});
+    } 
 
-export async function getEmail() {
-    function getTitle() {
-        return document.getElementById("username").innerHTML;
+       else if (getURL.substring(12,19) == "iimjobs"){
+        chrome.action.setIcon({path: { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }, tabId: activeInfo.tabId});
     }
-    const tabIdPass = await getTabId();
-    chrome.scripting.executeScript(
-        {
-            target: { tabId: tabIdPass, allFrames: true },
-            func: getTitle,
-        },
-        (injectionResults) => {
-            for (const frameResult of injectionResults)
-            chrome.storage.local.set({"email": frameResult.result});
-        });
-}
+
+       else if (getURL.substring(12,24) == "monsterindia") {
+        chrome.action.setIcon({path: { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }, tabId: activeInfo.tabId});
+    }
+
+       else {
+        chrome.action.setIcon({path: { "16": "icon-disabled16.png", "48": "icon-disabled48.png", "128": "icon-disabled128.png" }, tabId: activeInfo.tabId});
+    }
+   });
+ }); 
