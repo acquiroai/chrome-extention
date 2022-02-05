@@ -14,17 +14,20 @@
     <div class="topnav">
         <a href="popup.html">Home</a>
         <a href="hist.html">History</a>
-        <a href="#skills" class="active"> Skills </a>
+        <a href="skills.html" class="active"> Skills </a>
         <a href='#' id="logout-button">Log Out</a>
         <img align="right" src="Acquiro AI Logo 1.svg">
     </div>
 </header>
 
 <body>
-    <form onsubmit="updatePage()">
-        Enter name: <input type="text">
-        <input type="submit">
-    </form>
+    <div id="searchBox">
+        <center><h1>Search For a Particular Skill</h1>
+        <div class="searchBar">
+            <input type="text" id="inputSkill" size="27px" placeholder="Enter The Skill to be Searched">
+            <button id="inputSkillBtn">Search!</button>
+        </div>
+    </div>
 </body>
 
 

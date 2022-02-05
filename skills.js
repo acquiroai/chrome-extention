@@ -96,7 +96,13 @@ async function getResponse() {
         throw ''
     }
 
-    sendURL = 'http://65.1.91.60:5000/getskill/' + 'python'
+    // get skill from the form
+    let skill = document.getElementById("inputSkill");
+    
+    sendURL = 'http://65.1.91.60:5000/getskill/' + skill.value;
+
+    let inputButton = document.getElementById("searchBox");
+    inputButton.parentElement.removeChild(inputButton)
 
     return await fetch(sendURL)
         .then(
@@ -222,11 +228,10 @@ async function updatePage() {
         document.body.removeChild(document.getElementById('activitiesPage'));
         document.body.appendChild(sourcesPage);
     }
-
-    function changePage(evt) {
-        document.body.removeChild(evt.currentTarget.pageCurr);
-        document.body.appendChild(evt.currentTarget.pageToChg);
-      }
 }
 
 //updatePage();
+
+inputBtn = document.getElementById("inputSkillBtn");
+inputBtn.addEventListener("click", updatePage);
+// see line 99 - 105 for changing the input button.

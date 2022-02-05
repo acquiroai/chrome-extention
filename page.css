@@ -84,3 +84,16 @@ html {
 .linkedHeading:hover {
     color: #004AAD;
 }
+
+.searchBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.searchBar button {
+    background-color: #004AAD;
+    color : white;
+    border-radius: 8px;
+}
