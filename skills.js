@@ -84,7 +84,7 @@ async function getResponse() {
     let email = await chrome.storage.local.get("email")
     email = email.email
 
-    if (email === undefined || email === "") {
+    if (email === undefined || email === "" || email === null) {
         email = await getEmail();
     }
 

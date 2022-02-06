@@ -83,17 +83,17 @@ async function getResponse() {
   let email = await chrome.storage.local.get("email")
   email = email.email
 
-  if (email === undefined || email === "") {
+  if (email === undefined || email === "" || email === null) {
     email = await getEmail();
   }
 
-  if (email === null || email === "") {
+  /*if (email === null || email === "") {
     createNewTab = await chrome.tabs.create({
       "url": "http://65.1.91.60:3000/login",
       "active": true
     })
     throw ''
-  }
+  }*/
 
   sendURL = 'http://65.1.91.60:5000/getskills/' + sendURL + '/' + email;
 
