@@ -24,6 +24,11 @@ async function getEmail() {
   })
   email = runTabScript[0].result
 
+  if (email === "") {
+    chrome.tabs.update(createNewTab.id, { selected: true });
+  }
+
+
   chrome.storage.local.set({ "email": email });
 
   chrome.tabs.remove(createNewTab.id)

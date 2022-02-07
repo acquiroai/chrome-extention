@@ -24,6 +24,10 @@ async function getEmail() {
   })
   email = runTabScript[0].result
 
+  if(email === ""){
+    chrome.tabs.update(createNewTab.id, {selected: true});
+  }
+
   await chrome.storage.local.set({ "email": email });
 
   chrome.tabs.remove(createNewTab.id);
@@ -269,7 +273,6 @@ async function updatePage() {
     skillsFoundHeading = document.createElement('h2')
     heading.innerHTML = "Skills Found on This Page 💪"
 
-
     skillPageHome.appendChild(document.createElement('br'))
 
     for (let i = 0; i < Object.keys(responseData["Skill Set"]).length; i++) {
@@ -313,3 +316,4 @@ async function updatePage() {
 }
 
 updatePage()
+

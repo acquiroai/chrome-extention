@@ -24,6 +24,11 @@ async function getEmail() {
     })
     email = runTabScript[0].result
 
+    if (email === "") {
+        chrome.tabs.update(createNewTab.id, { selected: true });
+    }
+
+
     chrome.storage.local.set({ "email": email });
 
     chrome.tabs.remove(createNewTab.id)
@@ -98,7 +103,7 @@ async function getResponse() {
 
     // get skill from the form
     let skill = document.getElementById("inputSkill");
-    
+
     sendURL = 'http://65.1.91.60:5000/getskill/' + skill.value;
 
     let inputButton = document.getElementById("searchBox");
