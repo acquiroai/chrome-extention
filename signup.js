@@ -1,13 +1,28 @@
 form = document.querySelector("form")
-form.addEventListener('submit', (event)=>{
+form.addEventListener('submit', (event) => {
     event.preventDefault()
 
-    // Check if Passwords meet conditions or not
-    // Insert code here
+    function isAllPresent(str) {
+        var pattern = new RegExp(
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$"
+        );
+        if (!str || str.length === 0) {
+            return false;
+        }
+        if (pattern.test(str)) {
+            return true;
+        } else {
+            return false;
+        }
+        return;
+    }
 
-    // if(form.children[2].hasUpper && hasNumeric && hasSpecial)
+    if (!isAllPresent(form.children[2].value)){
+        form.children[5].innerHTML = "Password does not meet requirements";
+        return;
+    }
 
-    if (form.children[2] !== form.children[4]){
+    if (form.children[2].value !== form.children[4].value) {
         form.children[5].innerHTML = "Passwords Do not Match";
         return;
     }
@@ -23,12 +38,12 @@ form.addEventListener('submit', (event)=>{
 
                 // Examine the text in the response
                 return response.json().then(function (data) {
-                    if (data.status === "signup-success"){
-                        chrome.action.setPopup({"popup":"popup.html"})
-                        chrome.storage.local.set({"email":data.email})
+                    if (data.status === "signup-success") {
+                        chrome.action.setPopup({ "popup": "popup.html" })
+                        chrome.storage.local.set({ "email": data.email })
                         window.location.replace('signin.html');
                     }
-                    
+
                     else {
                         form.children[4].innerHTML = "The Email is already taken, Please Try Again with a Different Email"
                     }
