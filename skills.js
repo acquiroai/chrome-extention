@@ -1,87 +1,10 @@
-async function getEmail() {
-
-    createNewTab = await chrome.tabs.create({
-        "url": "http://65.1.91.60:3000/login",
-        "active": false
-    })
-
-    await new Promise((resolve, reject) => {
-        chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-            if (tabId == createNewTab.id && changeInfo.status == 'complete') {
-                resolve()
-            }
-        })
-    })
-
-    runTabScript = await chrome.scripting.executeScript({
-        target: {
-            tabId: createNewTab.id,
-            allFrames: true
-        },
-        func: () => {
-            return document.getElementById("username").innerHTML;
-        },
-    })
-    email = runTabScript[0].result
-
-    if (email === "") {
-        chrome.tabs.update(createNewTab.id, { selected: true });
-    }
-
-
-    chrome.storage.local.set({ "email": email });
-
-    chrome.tabs.remove(createNewTab.id)
-
-    return email
-}
-
-async function logout() {
-
-    createNewTab = await chrome.tabs.create({
-        "url": "http://65.1.91.60:3000/login",
-        "active": false
-    })
-
-    await new Promise((resolve, reject) => {
-        chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-            if (tabId == createNewTab.id && changeInfo.status == 'complete') {
-                resolve()
-            }
-        })
-    })
-
-    runTabScript = await chrome.scripting.executeScript({
-        target: {
-            tabId: createNewTab.id,
-            allFrames: true
-        },
-        func: () => {
-            document.getElementById("logout-button").click();
-        },
-    })
-
-
-    chrome.storage.local.remove("email");
-
-
-    chrome.tabs.remove(createNewTab.id)
-
-    return email
-}
-
 logout_button = document.getElementById('logout-button');
 logout_button.addEventListener("click", function (evt) {
-    evt.preventDefault();
-    logout();
-}, false);
-
-
-async function getCurrentTab() {
-    let queryOptions = { active: true, currentWindow: true };
-    let [tab] = await chrome.tabs.query(queryOptions);
-    return tab.url
-}
+  evt.preventDefault();
+  chrome.storage.local.remove("email");
+  chrome.action.setPopup({"popup":"signin.html"});
+  window.location.replace("signin.html");
+});
 
 async function getResponse() {
     //email = "f20190089@dubai.bits-pilani.ac.in"

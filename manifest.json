@@ -13,7 +13,7 @@
        "128": "icon-disabled128.png"
      },
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "signin.html"
     },
     "host_permissions": [
         "http://localhost:3000/","http://localhost:5000/","http://ec2co-ecsel-lof0xn94qlp0-2039102141.ap-south-1.elb.amazonaws.com:5000/","http://65.1.91.60:3000/","http://65.1.91.60:5000/"
