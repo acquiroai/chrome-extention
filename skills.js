@@ -1,9 +1,9 @@
 logout_button = document.getElementById('logout-button');
 logout_button.addEventListener("click", function (evt) {
-  evt.preventDefault();
-  chrome.storage.local.remove("email");
-  chrome.action.setPopup({"popup":"signin.html"});
-  window.location.replace("signin.html");
+    evt.preventDefault();
+    chrome.storage.local.remove("email");
+    chrome.action.setPopup({ "popup": "signin.html" });
+    window.location.replace("signin.html");
 });
 
 async function getResponse() {
@@ -16,14 +16,6 @@ async function getResponse() {
         email = await getEmail();
     }
 
-    if (email == null) {
-        createNewTab = await chrome.tabs.create({
-            "url": "http://65.1.91.60:3000/login",
-            "active": true
-        })
-        throw ''
-    }
-
     // get skill from the form
     let skill = document.getElementById("inputSkill");
     skill.value = btoa(skill.value);
@@ -31,6 +23,22 @@ async function getResponse() {
 
     let inputButton = document.getElementById("searchBox");
     inputButton.parentElement.removeChild(inputButton)
+
+    loader = document.createElement('div');
+    loader.id = "loader"
+    centeringLoader = document.createElement('center')
+    loader.appendChild(centeringLoader);
+    centeringLoader.appendChild(document.createElement('div'));
+    headingOfLoader = document.createElement('h1');
+    headingOfLoader.innerHTML = "Loading";
+    centeringLoader.appendChild(headingOfLoader);
+    centeringLoader.appendChild(document.createElement("br"));
+    centeringLoader.appendChild(document.createElement("br"));
+
+    loaderCircle = document.createElement('div');
+    loaderCircle.classList = "loader";
+    centeringLoader.appendChild(loaderCircle);
+    document.body.appendChild(loader);
 
     return await fetch(sendURL)
         .then(
@@ -43,11 +51,22 @@ async function getResponse() {
 
                 // Examine the text in the response
                 return response.json().then(function (data) {
+                    loader = document.getElementById("loader")
+                    document.body.removeChild(loader)
                     return data;
                 });
             }
         )
         .catch(function (err) {
+            let loader = document.getElementById("loader")
+            document.body.removeChild(loader)
+
+            updatedErrorPage = document.createElement('p')
+            updatedErrorPage.style.fontSize = "15px"
+            updatedErrorPage.style.textAlign = 'center'
+            //updatedErrorPage.style.color = 'Red'
+            updatedErrorPage.innerHTML = "Could Not Find the Skill for This Page 😿"
+            document.body.append(updatedErrorPage)
             console.log('Fetch Error :-S', err);
         });
 }
@@ -156,11 +175,11 @@ async function updatePage() {
         document.body.removeChild(document.getElementById('activitiesPage'));
         document.body.appendChild(sourcesPage);
     }
-    
+
     function changePage(evt) {
         document.body.removeChild(evt.currentTarget.pageCurr);
         document.body.appendChild(evt.currentTarget.pageToChg);
-      }
+    }
 }
 
 //updatePage();
