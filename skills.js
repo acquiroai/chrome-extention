@@ -26,8 +26,8 @@ async function getResponse() {
 
     // get skill from the form
     let skill = document.getElementById("inputSkill");
-
-    sendURL = 'http://65.1.91.60:5000/getskill/' + skill.value;
+    skill.value = btoa(skill.value);
+    sendURL = 'http://65.1.91.60:5000/skill/' + skill.value;
 
     let inputButton = document.getElementById("searchBox");
     inputButton.parentElement.removeChild(inputButton)
@@ -156,6 +156,11 @@ async function updatePage() {
         document.body.removeChild(document.getElementById('activitiesPage'));
         document.body.appendChild(sourcesPage);
     }
+    
+    function changePage(evt) {
+        document.body.removeChild(evt.currentTarget.pageCurr);
+        document.body.appendChild(evt.currentTarget.pageToChg);
+      }
 }
 
 //updatePage();
