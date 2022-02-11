@@ -127,6 +127,8 @@ async function updatePage() {
         sourcesPage.appendChild(document.createElement('br'))
 
         for (let i = 0; i < Object.keys(resp).length; i++) {
+            
+            if (resp[Object.keys(resp)[i]].length === 0) continue;
 
             sourceInfo = resp[Object.keys(resp)[i]]
             containerDiv = document.createElement('div');

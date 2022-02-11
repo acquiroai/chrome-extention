@@ -2,7 +2,7 @@ logout_button = document.getElementById('logout-button');
 logout_button.addEventListener("click", function (evt) {
   evt.preventDefault();
   chrome.storage.local.remove("email");
-  chrome.action.setPopup({"popup":"signin.html"});
+  chrome.action.setPopup({ "popup": "signin.html" });
   window.location.replace("signin.html");
 });
 
@@ -94,19 +94,19 @@ async function updatePage() {
     activitiesPage.appendChild(document.createElement('br'))
 
     for (let i = 1; i < Object.keys(resp).length; i++) {
-      for (let j = 0; j < Object.keys(resp[Object.keys(resp)[i]]).length; j++) {
 
+      if (Object.keys(resp)[i] === "Input Skill") continue;
+
+      if (Object.keys(resp[Object.keys(resp)[i]]).length !== 0) {
         acti = document.createElement('h2');
-        acti.innerHTML = Object.keys(resp[Object.keys(resp)[i]])[j];
+        acti.innerHTML = Object.keys(resp)[i];
 
         acti.addEventListener("click", sourceSelected);
 
-        placeHolder = Object.keys(resp[Object.keys(resp)[i]])[j];
-        acti.sourceChosen = resp[Object.keys(resp)[i]][placeHolder];
+        placeHolder = Object.keys(resp)[i];
+        acti.sourceChosen = resp[Object.keys(resp)[i]];
         acti.classList.add("linkedHeading");
         acti.sourceType = placeHolder;
-        //skill.addEventListener("mouseenter", function(){skill.style.textDecoration = "underline"});
-        //skill.addEventListener("mouseleave", function(){skill.style.textDecoration = "none"});
         activitiesPage.appendChild(acti);
       }
     }
@@ -158,8 +158,8 @@ async function updatePage() {
       infoImg = document.createElement('img');
       infoImg.style.float = "left";
       infoImg.src = sourceInfo["Picture"];
-      infoImg.width = "70"
-      infoImg.height = "70"
+      infoImg.width = "70";
+      infoImg.height = "70";
       infoImg.maxWidth = "100%";
       imgDiv.appendChild(infoImg);
 
