@@ -88,20 +88,23 @@ async function updatePage() {
     activitiesPage.appendChild(document.createElement('br'))
 
     for (let i = 1; i < Object.keys(resp).length; i++) {
-        for (let j = 0; j < Object.keys(resp[Object.keys(resp)[i]]).length; j++) {
 
+        if (Object.keys(resp)[i] === "Input Skill") continue;
+
+        if (Object.keys(resp[Object.keys(resp)[i]]).length !== 0) {
             acti = document.createElement('h2');
-            acti.innerHTML = Object.keys(resp[Object.keys(resp)[i]])[j];
+            acti.innerHTML = Object.keys(resp)[i];
 
             acti.addEventListener("click", sourceSelected);
 
-            placeHolder = Object.keys(resp[Object.keys(resp)[i]])[j];
-            acti.sourceChosen = resp[Object.keys(resp)[i]][placeHolder];
+            placeHolder = Object.keys(resp)[i];
+            acti.sourceChosen = resp[Object.keys(resp)[i]];
             acti.classList.add("linkedHeading");
             acti.sourceType = placeHolder;
             activitiesPage.appendChild(acti);
         }
     }
+
 
     document.body.appendChild(activitiesPage);
 
@@ -127,7 +130,7 @@ async function updatePage() {
         sourcesPage.appendChild(document.createElement('br'))
 
         for (let i = 0; i < Object.keys(resp).length; i++) {
-            
+
             if (resp[Object.keys(resp)[i]].length === 0) continue;
 
             sourceInfo = resp[Object.keys(resp)[i]]
