@@ -87,7 +87,7 @@ async function updatePage() {
 
     activitiesPage.appendChild(document.createElement('br'))
 
-    for (let i = 1; i < Object.keys(resp).length; i++) {
+    for (let i = 0; i < Object.keys(resp).length; i++) {
 
         if (Object.keys(resp)[i] === "Input Skill") continue;
 
