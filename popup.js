@@ -199,8 +199,10 @@ async function updatePage() {
     skillPageHome.id = "skillPageHome";
     skillPageHome.style.margin = "5%";
 
-    let heading = document.createElement('h1');
+    heading = document.createElement('h1');
     heading.innerHTML = responseData["Company & Job Title"];
+    console.log(responseData["Company & Job Title"])
+
     skillPageHome.appendChild(heading);
     skillsFoundHeading = document.createElement('h2')
     heading.innerHTML = "Skills Found on This Page 💪"
