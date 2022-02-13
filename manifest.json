@@ -3,7 +3,6 @@
     "name": "Acquiro AI",
     "description": "Get a personalised Roadmap for your Dream job",
     "version": "0.1",
-    "default_icon": "icon-disabled.png",
     "background": {
         "service_worker": "background.js"
       },
