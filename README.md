@@ -2,7 +2,7 @@
 
 ## 🗺️ Links
 
-*   [`Naukri 1`](https://www.naukri.com/job-listings-aws-cloud-and-linux-administrator-sourcehov-india-private-limited-pune-3-to-7-years-211021008716 src=jobsearchDesk&sid=16445174980913692&xp=1&px=1)
+*   [`Naukri 1`](https://www.naukri.com/job-listings-aws-cloud-and-linux-administrator-sourcehov-india-private-limited-pune-3-to-7-years-211021008716?src=jobsearchDesk&sid=16445174980913692&xp=1&px=1)
 *   [`Naukri 2`](https://www.naukri.com/job-listings-senior-aws-administrator-implementation-deployment-x-equals-to-mumbai-nagpur-nasik-nashik-hyderabad-secunderabad-pune-coimbatore-bangalore-bengaluru-delhi-ncr-4-to-9-years-040222902428?src=jobsearchDesk&sid=16445174980913692&xp=5&px=1)
 *   [`Naukri 3`](https://www.naukri.com/job-listings-digital-marketing-executive-eclatmax-digital-mumbai-all-areas-0-to-5-years-080222000182?src=jobsearchDesk&sid=16445175351703788&xp=1&px=1)
 *   [`Naukri 4`](https://www.naukri.com/job-listings-telesales-executive-renewal-scheduling-and-marketing-hicare-services-pvt-ltd-mumbai-0-to-3-years-080222003069?src=jobsearchDesk&sid=16445175351703788&xp=6&px=1)
