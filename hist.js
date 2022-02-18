@@ -16,14 +16,6 @@ async function getResponse() {
     email = await getEmail();
   }
 
-  if (email == null) {
-    createNewTab = await chrome.tabs.create({
-      "url": "http://65.1.91.60:3000/login",
-      "active": true
-    })
-    throw ''
-  }
-
   sendURL = 'http://65.1.91.60:5000/history/' + btoa(email)
 
   return await fetch(sendURL)
@@ -37,11 +29,22 @@ async function getResponse() {
 
         // Examine the text in the response
         return response.json().then(function (data) {
+          let loader = document.getElementById("loader")
+          loader.parentElement.removeChild(loader)
           return data;
         });
       }
     )
     .catch(function (err) {
+      let loader = document.getElementById("loader")
+      loader.parentElement.removeChild(loader)
+
+      updatedErrorPage = document.createElement('p')
+      updatedErrorPage.style.fontSize = "15px"
+      updatedErrorPage.style.textAlign = 'center'
+      //updatedErrorPage.style.color = 'Red'
+      updatedErrorPage.innerHTML = "Cant load history ☠️"
+      document.body.append(updatedErrorPage)
       console.log('Fetch Error :-S', err);
     });
 }

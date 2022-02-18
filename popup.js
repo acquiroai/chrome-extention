@@ -235,6 +235,13 @@ async function updatePage() {
     jobLoc.innerHTML = "Location: " + responseData["Location"]
     skillPageHome.appendChild(jobLoc);
 
+    glassDoor = document.createElement("a");
+    glassDoor.innerHTML = "Glassdoor reviews";
+    glassDoor.href = "https://www.glassdoor.com/Search/results.htm?keyword=" + responseData["Company & Job Title"].split('-')[0].trim() + "&locName=" + responseData["Location"];
+    glassDoor.target = "_blank"
+    glassDoor.rel = "noopener noreferrer"
+    skillPageHome.appendChild(glassDoor);
+
     if (document.getElementById("activitiesPage") !== null) {
       document.body.removeChild(document.getElementById("activitiesPage"));
     }
