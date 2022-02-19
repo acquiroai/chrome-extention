@@ -38,7 +38,7 @@ form.addEventListener('submit', (event) => {
 
                 // Examine the text in the response
                 return response.json().then(function (data) {
-                    if (data.status === "signup-success") {
+                    if (data.status === "signin-success") {
                         chrome.action.setPopup({ "popup": "popup.html" })
                         chrome.storage.local.set({ "email": data.email })
                         window.location.replace('signin.html');
