@@ -200,8 +200,7 @@ async function updatePage() {
     skillPageHome.style.margin = "5%";
 
     heading = document.createElement('h1');
-    heading.innerHTML = responseData["Company & Job Title"];
-    console.log(responseData["Company & Job Title"])
+    //heading.innerHTML = responseData["Job Title"];
 
     skillPageHome.appendChild(heading);
     skillsFoundHeading = document.createElement('h2')
@@ -224,8 +223,12 @@ async function updatePage() {
     //jobMeta = document.createElement('div');
     skillPageHome.append(document.createElement('br'))
     jobTitle = document.createElement('h3');
-    jobTitle.innerHTML = "Title & Company Name: " + responseData["Company & Job Title"];
+    jobTitle.innerHTML = "Job Title: " + responseData["title"];
     skillPageHome.appendChild(jobTitle);
+
+    companyName = document.createElement('h3');
+    companyName.innerHTML = "Company: " + responseData["company"];
+    skillPageHome.appendChild(companyName);
 
     minWorkEx = document.createElement('h3');
     minWorkEx.innerHTML = "Min Work Experience: " + responseData["Minimum Work Experience"] + " (in years)";
@@ -237,10 +240,13 @@ async function updatePage() {
 
     glassDoor = document.createElement("a");
     glassDoor.innerHTML = "Glassdoor reviews";
-    glassDoor.href = "https://www.glassdoor.com/Search/results.htm?keyword=" + responseData["Company & Job Title"].split('-')[0].trim() + "&locName=" + responseData["Location"];
+    glassDoor.href = "https://www.glassdoor.com/Search/results.htm?keyword=" + responseData["company"] + "&locName=" + responseData["Location"];
     glassDoor.target = "_blank"
     glassDoor.rel = "noopener noreferrer"
     skillPageHome.appendChild(glassDoor);
+
+    skillPageHome.appendChild(document.createElement("br"));
+    skillPageHome.appendChild(document.createElement("br"));
 
     if (document.getElementById("activitiesPage") !== null) {
       document.body.removeChild(document.getElementById("activitiesPage"));

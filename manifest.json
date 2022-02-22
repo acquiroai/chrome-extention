@@ -3,19 +3,34 @@
     "name": "Acquiro AI",
     "description": "Get a personalised Roadmap for your Dream job",
     "version": "0.1",
-    "background": {
-        "service_worker": "background.js"
-      },
+    "background": [
+        {
+            "service_worker": "background.js"
+        },
+        {
+            "service_worker": "test.js",
+            "type": "module"
+        }
+    ],
     "icons": {
         "16": "icon-disabled16.png",
         "48": "icon-disabled48.png",
-       "128": "icon-disabled128.png"
-     },
+        "128": "icon-disabled128.png"
+    },
     "action": {
         "default_popup": "signin.html"
     },
     "host_permissions": [
-        "http://localhost:3000/","http://localhost:5000/","http://ec2co-ecsel-lof0xn94qlp0-2039102141.ap-south-1.elb.amazonaws.com:5000/","http://65.1.91.60:3000/","http://65.1.91.60:5000/"
+        "http://localhost:3000/",
+        "http://localhost:5000/",
+        "http://ec2co-ecsel-lof0xn94qlp0-2039102141.ap-south-1.elb.amazonaws.com:5000/",
+        "http://65.1.91.60:3000/",
+        "http://65.1.91.60:5000/"
     ],
-    "permissions": ["activeTab","tabs","scripting","storage"]
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "scripting",
+        "storage"
+    ]
 }

@@ -178,7 +178,7 @@ async function updatePage() {
     skillPageHome.style.margin = "5%";
 
     let heading = document.createElement('h1');
-    heading.innerHTML = responseData["Company & Job Title"];
+    heading.innerHTML = responseData["title"] + ' - ' + responseData["company"];
     heading.style.display = "inline-block";
     skillPageHome.appendChild(heading);
 
@@ -207,8 +207,12 @@ async function updatePage() {
     //jobMeta = document.createElement('div');
     skillPageHome.append(document.createElement('br'))
     jobTitle = document.createElement('h3');
-    jobTitle.innerHTML = "Title & Company Name: " + responseData["Company & Job Title"];
+    jobTitle.innerHTML = "Job Title: " + responseData["title"];
     skillPageHome.appendChild(jobTitle);
+
+    companyName = document.createElement('h3');
+    companyName.innerHTML = "Company: " + responseData["company"];
+    skillPageHome.appendChild(companyName);
 
     minWorkEx = document.createElement('h3');
     minWorkEx.innerHTML = "Min Work Experience: " + responseData["Minimum Work Experience"] + " (in years)";
@@ -220,7 +224,7 @@ async function updatePage() {
 
     glassDoor = document.createElement("a");
     glassDoor.innerHTML = "Glassdoor reviews";
-    glassDoor.href = "https://www.glassdoor.com/Search/results.htm?keyword=" + responseData["Company & Job Title"].split('-')[0].trim() + "&locName=" + responseData["Location"];
+    glassDoor.href = "https://www.glassdoor.com/Search/results.htm?keyword=" + responseData["company"] + "&locName=" + responseData["Location"];
     glassDoor.target = "_blank"
     glassDoor.rel = "noopener noreferrer"
     skillPageHome.appendChild(glassDoor);
@@ -248,7 +252,7 @@ async function updatePage() {
 
     for (let i = 0; i < responseDataArr.length; i++) {
       hist = document.createElement('h2');
-      hist.innerHTML = responseDataArr[i]["Company & Job Title"];
+      hist.innerHTML = responseDataArr[i]["title"] + ' - ' +responseDataArr[i]["company"];
       hist.classList.add("linkedHeading")
 
       hist.addEventListener("click", skillsFound);
