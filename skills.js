@@ -19,7 +19,7 @@ async function getResponse() {
     // get skill from the form
     let skill = document.getElementById("inputSkill");
     skill.value = btoa(skill.value);
-    sendURL = 'http://65.1.91.60:5000/skill/' + skill.value + '/' + btoa(email);
+    sendURL = 'http://65.1.91.60:5000/skill/' + skill.value + '/' + email;
 
     let inputButton = document.getElementById("searchBox");
     inputButton.parentElement.removeChild(inputButton)

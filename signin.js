@@ -15,7 +15,7 @@ form.addEventListener('submit', (event)=>{
                 return response.json().then(function (data) {
                     if (data.status === "login-success"){
                         chrome.action.setPopup({"popup":"popup.html"})
-                        chrome.storage.local.set({"email":data.email})
+                        chrome.storage.local.set({"email":btoa(data.email)})
                         window.location.replace('popup.html');
                     }
                     
