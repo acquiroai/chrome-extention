@@ -16,7 +16,7 @@ async function getResponse() {
     email = await getEmail();
   }
 
-  sendURL = 'http://65.1.91.60:5000/history/' + email;
+  sendURL = 'http://3.111.237.195:5000/history/' + email;
 
   return await fetch(sendURL)
     .then(

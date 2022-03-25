@@ -26,7 +26,7 @@ form.addEventListener('submit', (event) => {
         form.children[5].innerHTML = "Passwords Do not Match";
         return;
     }
-    sendURL = 'http://65.1.91.60:5000/signup/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
+    sendURL = 'http://3.111.237.195:5000/signup/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
     fetch(sendURL)
         .then(
             function (response) {

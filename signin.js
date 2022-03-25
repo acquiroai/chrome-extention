@@ -1,7 +1,7 @@
 form = document.querySelector("form")
 form.addEventListener('submit', (event)=>{
     event.preventDefault()
-    sendURL = 'http://65.1.91.60:5000/login/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
+    sendURL = 'http://3.111.237.195:5000/login/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
     fetch(sendURL)
         .then(
             function (response) {
