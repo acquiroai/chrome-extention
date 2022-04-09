@@ -17,7 +17,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 
         else if (getURL.substring(12, 39) == "monsterindia.com/seeker/job") {
             chrome.action.setIcon({ path: { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }, tabId: tabId });
-            console.log("monster")
+        }
+
+        else if (getURL.substring(11, 33) == "linkedin.com/jobs/view") {
+            chrome.action.setIcon({ path: { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }, tabId: tabId });
         }
 
         else {
