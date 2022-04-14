@@ -3,15 +3,9 @@
     "name": "Upskillr",
     "description": "Get a personalised Roadmap for your Dream job",
     "version": "0.1",
-    "background": [
-        {
-            "service_worker": "background.js"
-        },
-        {
-            "service_worker": "test.js",
-            "type": "module"
-        }
-    ],
+    "background": {
+        "service_worker": "background.js"
+    },
     "icons": {
         "16": "icon-disabled16.png",
         "48": "icon-disabled48.png",

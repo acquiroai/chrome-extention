@@ -79,6 +79,7 @@ async function updatePage() {
     for (let i = 0; i < Object.keys(resp).length; i++) {
 
       if (Object.keys(resp)[i] === "Input Skill") continue;
+      if (Object.keys(resp)[i] === "Medium" && resp[Object.keys(resp)[i]] === null) continue;
 
       if (Object.keys(resp[Object.keys(resp)[i]]).length !== 0) {
         acti = document.createElement('h2');
