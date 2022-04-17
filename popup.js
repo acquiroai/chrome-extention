@@ -93,6 +93,28 @@ async function updatePage() {
 
     activitiesPage.appendChild(document.createElement('br'))
 
+    thingsToDoDiv = document.createElement('div');
+    thingsToDoDiv.style.marginLeft = "3%";
+    thingsToDoHeading = document.createElement("h2")
+    thingsToDoHeading.innerHTML = "Courses"
+    thingsToDoHeading.style.textDecoration = "underline";
+    thingsToDoDiv.appendChild(thingsToDoHeading);
+
+
+    thingsToReadDiv = document.createElement('div');
+    thingsToReadDiv.style.marginLeft = "3%";
+    thingsToReadHeading = document.createElement("h2")
+    thingsToReadHeading.innerHTML = "Reading Material"
+    thingsToReadHeading.style.textDecoration = "underline";
+    thingsToReadDiv.appendChild(thingsToReadHeading);
+
+    thingsToWatchDiv = document.createElement('div');
+    thingsToWatchDiv.style.marginLeft = "3%";
+    thingsToWatchHeading = document.createElement("h2")
+    thingsToWatchHeading.innerHTML = "Watch List"
+    thingsToWatchHeading.style.textDecoration = "underline";
+    thingsToWatchDiv.appendChild(thingsToWatchHeading);
+
     for (let i = 0; i < Object.keys(resp).length; i++) {
 
       if (Object.keys(resp)[i] === "Input Skill") continue;
@@ -108,8 +130,32 @@ async function updatePage() {
         acti.sourceChosen = resp[Object.keys(resp)[i]];
         acti.classList.add("linkedHeading");
         acti.sourceType = placeHolder;
-        activitiesPage.appendChild(acti);
+        
+        if (Object.keys(resp)[i] === "Books" || Object.keys(resp)[i] === "Medium") {
+          thingsToReadDiv.appendChild(acti);
+        }
+
+        if (Object.keys(resp)[i] === "Coursera" || Object.keys(resp)[i] === "Class Central" || Object.keys(resp)[i] === "Future Learn" || Object.keys(resp)[i] === "SkillShare" || Object.keys(resp)[i] === "Udemy" || Object.keys(resp)[i] === "edX") {
+          thingsToDoDiv.appendChild(acti);
+        }
+
+        if (Object.keys(resp)[i] === "YouTube") {
+          thingsToWatchDiv.appendChild(acti);
+        }
       }
+    }
+
+    if (thingsToDoDiv.childElementCount > 1) {
+      activitiesPage.appendChild(thingsToDoDiv);
+      thingsToDoDiv.appendChild(document.createElement("br"));
+    }
+    if (thingsToReadDiv.childElementCount > 1) {
+      activitiesPage.appendChild(thingsToReadDiv);
+      thingsToReadDiv.appendChild(document.createElement("br"));
+    }
+    if (thingsToWatchDiv.childElementCount > 1) {
+      activitiesPage.appendChild(thingsToWatchDiv);
+      thingsToWatchDiv.appendChild(document.createElement("br"));
     }
 
     if (document.getElementById("sourcesPage") !== null) {
