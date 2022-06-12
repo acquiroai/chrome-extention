@@ -142,6 +142,10 @@ async function updatePage() {
         if (Object.keys(resp)[i] === "YouTube") {
           thingsToWatchDiv.appendChild(acti);
         }
+
+        if (Object.keys(resp)[i] === "YouTube" || Object.keys(resp)[i] === "Talks"){
+          thingsToWatchDiv.appendChild(acti);
+      }
       }
     }
 

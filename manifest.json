@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Upskillr",
     "description": "Get a personalised Roadmap for your Dream job",
-    "version": "0.1",
+    "version": "0.1.4",
     "background": {
         "service_worker": "background.js"
     },
