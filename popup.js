@@ -131,11 +131,11 @@ async function updatePage() {
         acti.classList.add("linkedHeading");
         acti.sourceType = placeHolder;
         
-        if (Object.keys(resp)[i] === "Books" || Object.keys(resp)[i] === "Medium") {
+        if (Object.keys(resp)[i] === "Books" || Object.keys(resp)[i] === "Medium" || Object.keys(resp)[i] === "MITOCW Resource") {
           thingsToReadDiv.appendChild(acti);
         }
 
-        if (Object.keys(resp)[i] === "Coursera" || Object.keys(resp)[i] === "Class Central" || Object.keys(resp)[i] === "Future Learn" || Object.keys(resp)[i] === "SkillShare" || Object.keys(resp)[i] === "Udemy" || Object.keys(resp)[i] === "edX") {
+        if (Object.keys(resp)[i] === "Coursera" || Object.keys(resp)[i] === "Class Central" || Object.keys(resp)[i] === "Future Learn" || Object.keys(resp)[i] === "SkillShare" || Object.keys(resp)[i] === "Udemy" || Object.keys(resp)[i] === "edX" || Object.keys(resp)[i] === "MITOCW") {
           thingsToDoDiv.appendChild(acti);
         }
 
