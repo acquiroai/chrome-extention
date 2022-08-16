@@ -25,13 +25,13 @@ async function getResponse() {
 
   /*if (email === null || email === "") {
     createNewTab = await chrome.tabs.create({
-      "url": "http://3.111.237.195:3000/login",
+      "url": "http://3.109.207.163:3000/login",
       "active": true
     })
     throw ''
   }*/
 
-  sendURL = 'http://3.111.237.195:5000/getskills/' + sendURL + '/' + email;
+  sendURL = 'http://3.109.207.163:5000/getskills/' + sendURL + '/' + email;
 
   return await fetch(sendURL)
     .then(
