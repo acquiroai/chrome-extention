@@ -1,7 +1,7 @@
 form = document.querySelector("form")
 form.addEventListener('submit', (event)=>{
     event.preventDefault()
-    sendURL = 'http://3.109.207.163:5000/login/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
+    sendURL = 'http://api.upskillr.ai:5000/login/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
     fetch(sendURL)
         .then(
             function (response) {

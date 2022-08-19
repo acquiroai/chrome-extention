@@ -16,7 +16,7 @@ async function getResponse() {
     email = await getEmail();
   }
 
-  sendURL = 'http://3.109.207.163:5000/history/' + email;
+  sendURL = 'http://api.upskillr.ai:5000/history/' + email;
 
   return await fetch(sendURL)
     .then(

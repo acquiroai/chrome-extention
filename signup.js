@@ -26,7 +26,7 @@ form.addEventListener('submit', (event) => {
         form.children[5].innerHTML = "Passwords Do not Match";
         return;
     }
-    sendURL = 'http://3.109.207.163:5000/signup/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
+    sendURL = 'http://api.upskillr.ai:5000/signup/' + btoa(form.children[0].value) + '/' + btoa(form.children[2].value)
     fetch(sendURL)
         .then(
             function (response) {
